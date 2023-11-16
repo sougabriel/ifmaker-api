@@ -1,0 +1,4 @@
+#!/bin/bash
+
+echo "Inciando Servidor! "
+node server.js
