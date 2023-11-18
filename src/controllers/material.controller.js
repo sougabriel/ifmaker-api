@@ -1,4 +1,5 @@
 const Material = require("../models/material.model");
+const { Op } = require("sequelize");
 
 exports.adicionar = (req, res) => {
 	if (!req.body.nome || !req.body.tipo || !req.body.quantidade) {
@@ -44,6 +45,56 @@ exports.consultarPorId = (req, res) => {
 	const id = req.params.id;
 
 	Material.findByPk(id)
+		.then((data) => {
+			if (data) {
+				res.send(data);
+			} else {
+				res.status(404).send({
+					message: `Não foi possível encontrar material com id = ${id}.`,
+				});
+			}
+		})
+		.catch((err) => {
+			res.status(500).send({
+				message:
+					err.message ||
+					"\n" +
+						"Erro ao tentar encontrar material com id = " +
+						id +
+						".",
+			});
+		});
+};
+
+exports.consultarPorNome = (req, res) => {
+	const nome = req.params.nome;
+
+	Material.findAll({ where: { nome: { [Op.like]: "%" + nome + "%" } } })
+		.then((data) => {
+			if (data) {
+				res.send(data);
+			} else {
+				res.status(404).send({
+					message: `Não foi possível encontrar material com id = ${id}.`,
+				});
+			}
+		})
+		.catch((err) => {
+			res.status(500).send({
+				message:
+					err.message ||
+					"\n" +
+						"Erro ao tentar encontrar material com id = " +
+						id +
+						".",
+			});
+		});
+};
+
+exports.consultarPorTipo = (req, res) => {
+	const tipo = req.params.tipo;
+
+	Material.findAll({ where: { tipo: { [Op.like]: "%" + tipo + "%" } } })
 		.then((data) => {
 			if (data) {
 				res.send(data);
@@ -117,6 +168,7 @@ exports.removerPorId = (req, res) => {
 		});
 };
 
+// Métodos do Administrador
 exports.removerTodos = (req, res) => {
 	Material.destroy({
 		where: {},
