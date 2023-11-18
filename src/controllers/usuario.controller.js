@@ -32,7 +32,11 @@ exports.adicionar = (req, res) => {
 
 // Retorna todos os usuários do banco de dados
 exports.consultarTodos = (req, res) => {
-	Usuario.findAll()
+	Usuario.findAll(
+		{
+			attributes: ['id', 'nivel', 'idPessoa', 'createdAt', 'updatedAt'],
+		}
+	)
 		.then((data) => {
 			res.send(data);
 		})
