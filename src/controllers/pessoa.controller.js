@@ -1,4 +1,5 @@
 const Pessoa = require("../models/pessoa.model");
+const { Op } = require("sequelize");
 
 exports.adicionar = (req, res) => {
 	// Validação dos Campos
