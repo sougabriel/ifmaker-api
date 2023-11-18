@@ -68,6 +68,31 @@ exports.consultarPorId = (req, res) => {
 		});
 };
 
+exports.consultarPorNome = (req, res) => {
+	const nome = req.params.nome;
+
+	Pessoa.findAll({ where: { nome: { [Op.like]: "%" + nome + "%" } } })
+		.then((data) => {
+			if (data) {
+				res.send(data);
+			} else {
+				res.status(404).send({
+					message: `Não foi possível encontrar pessoa com id = ${id}.`,
+				});
+			}
+		})
+		.catch((err) => {
+			res.status(500).send({
+				message:
+					err.message ||
+					"\n" +
+						"Erro ao tentar encontrar pessoa com id = " +
+						id +
+						".",
+			});
+		});
+};
+
 exports.atualizarPorId = (req, res) => {
 	const id = req.params.id;
 
