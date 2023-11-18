@@ -1,4 +1,5 @@
 const Projeto = require("../models/projeto.model");
+const { Op } = require("sequelize");
 
 exports.adicionar = (req, res) => {
 	if (!req.body.nome) {
@@ -43,6 +44,31 @@ exports.consultarPorId = (req, res) => {
 	const id = req.params.id;
 
 	Projeto.findByPk(id)
+		.then((data) => {
+			if (data) {
+				res.send(data);
+			} else {
+				res.status(404).send({
+					message: `Não foi possível encontrar projeto com id = ${id}.`,
+				});
+			}
+		})
+		.catch((err) => {
+			res.status(500).send({
+				message:
+					err.message ||
+					"\n" +
+						"Erro ao tentar encontrar projeto com id = " +
+						id +
+						".",
+			});
+		});
+};
+
+exports.consultarPorNome = (req, res) => {
+	const nome = req.params.nome;
+
+	Projeto.findAll({ where: { nome: { [Op.like]: "%" + nome + "%" } } })
 		.then((data) => {
 			if (data) {
 				res.send(data);
