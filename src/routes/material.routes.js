@@ -6,7 +6,8 @@ module.exports = (app) => {
 	router.post("/", material.adicionar);
 	router.get("/", material.consultarTodos);
 	router.get("/:id", material.consultarPorId);
-	router.put("/:id", material.atualizarPorId);
+	router.get("/:nome", material.consultarPorNome);
+	router.put("/:tipo", material.atualizarPorTipo);
 	router.delete("/:id", material.removerPorId);
 	router.delete("/", material.removerTodos);
 
