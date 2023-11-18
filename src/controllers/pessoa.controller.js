@@ -12,6 +12,9 @@ exports.adicionar = (req, res) => {
 	const pessoa = {
 		// campos de requisição
 		nome: req.body.nome,
+		email: req.body.email,
+		telefone: req.body.telefone,
+		publico: req.body.publico,
 	};
 
 	Pessoa.create(pessoa)
