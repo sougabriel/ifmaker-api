@@ -1,9 +1,15 @@
 const Usuario = require("../models/usuario.model");
+const { Op } = require("sequelize");
 
 // Cria um novo usuário
 exports.adicionar = (req, res) => {
 	// Validação dos campos
-	if (!req.body.senha || !req.body.nivel || !req.body.idPessoa) {
+	if (
+		!req.body.nomeUsuario ||
+		!req.body.senha ||
+		!req.body.nivel ||
+		!req.body.idPessoa
+	) {
 		res.status(400).send({
 			message: "Quaisquer dos campos não podem ser vazios!",
 		});
@@ -12,6 +18,7 @@ exports.adicionar = (req, res) => {
 
 	// Cria usuário
 	const usuario = {
+		nomeUsuario: req.body.nomeUsuario,
 		senha: req.body.senha,
 		nivel: req.body.nivel,
 		idPessoa: req.body.idPessoa,
@@ -32,11 +39,16 @@ exports.adicionar = (req, res) => {
 
 // Retorna todos os usuários do banco de dados
 exports.consultarTodos = (req, res) => {
-	Usuario.findAll(
-		{
-			attributes: ['id', 'nivel', 'idPessoa', 'createdAt', 'updatedAt'],
-		}
-	)
+	Usuario.findAll({
+		attributes: [
+			"id",
+			"nomeUsuario",
+			"nivel",
+			"idPessoa",
+			"createdAt",
+			"updatedAt",
+		],
+	})
 		.then((data) => {
 			res.send(data);
 		})
@@ -71,6 +83,30 @@ exports.consultarPorId = (req, res) => {
 						"Erro ao tentar encontrar usuário com id = " +
 						id +
 						".",
+			});
+		});
+};
+
+exports.logar = (req, res) => {
+	const nomeUsuario = req.body.nomeUsuario;
+	const senha = req.body.senha;
+
+	Usuario.findAll({
+		where: { 
+			[Op.and]: [
+				{ nomeUsuario: nomeUsuario}, 
+				{ senha: senha }
+			] 
+		},
+	})
+		.then((data) => {
+			res.send(data);
+		})
+		.catch((err) => {
+			res.status(500).send({
+				message:
+					err.message ||
+					"\n" + "Falha ao tentar encontrar por usuários.",
 			});
 		});
 };

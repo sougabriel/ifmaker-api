@@ -116,7 +116,7 @@ exports.consultarPorTipo = (req, res) => {
 		});
 };
 
-exports.atualizarPorId = (req, res) => {
+exports.atualizar = (req, res) => {
 	const id = req.params.id;
 
 	Material.update(req.body, {

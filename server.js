@@ -1,6 +1,9 @@
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
+var multer = require('multer');
+var upload = multer();
+var bodyParser = require("body-parser");
 
 const app = express();
 
@@ -12,9 +15,14 @@ app.use(cors(corsOptions));
 
 // Analisar solicitações do tipo de conteúdo - application/json
 app.use(express.json());
+app.use(bodyParser.json());
 
 // Analisar solicitações do tipo de conteúdo - application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: true }));
+
+// for parsing multipart/form-data
+app.use(upload.array()); 
+app.use(express.static('public'));
 
 const db = require("./src/models");
 db.sequelize

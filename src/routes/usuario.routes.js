@@ -12,6 +12,8 @@ module.exports = (app) => {
 	// Retorna um único usuário pelo id
 	router.get("/:id", usuario.consultarPorId);
 
+	router.post("/login", usuario.logar);
+
 	// Altera usuário pelo id
 	router.put("/:id", usuario.atualizarPorId);
 
