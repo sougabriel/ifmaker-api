@@ -9,7 +9,7 @@ module.exports = (sequelize, Sequelize) => {
 			allowNull: false,
 		},
 		telefone: {
-			type: Sequelize.INTEGER,
+			type: Sequelize.INTEGER(12),
 			allowNull: true,
 		},
 		publico: {
