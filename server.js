@@ -42,7 +42,9 @@ app.get("/", (req, res) => {
 require("./src/routes/pessoa.routes")(app);
 require("./src/routes/usuario.routes")(app);
 require("./src/routes/material.routes")(app);
+require("./src/routes/emprestimo.routes")(app);
 require("./src/routes/projeto.routes")(app);
+require("./src/routes/pessoaProjeto.routes")(app);
 require("./src/routes/registro.routes")(app);
 require("./src/routes/acesso.routes")(app);
 
