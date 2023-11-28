@@ -94,7 +94,7 @@ exports.consultarPorNome = (req, res) => {
 		});
 };
 
-exports.atualizarPorId = (req, res) => {
+exports.atualizar = (req, res) => {
 	const id = req.params.id;
 
 	Pessoa.update(req.body, {

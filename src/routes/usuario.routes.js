@@ -15,7 +15,7 @@ module.exports = (app) => {
 	router.post("/login", usuario.logar);
 
 	// Altera usuário pelo id
-	router.put("/:id", usuario.atualizarPorId);
+	router.put("/:id", usuario.atualizar);
 
 	// Remove usuário pelo id
 	router.delete("/:id", usuario.removerPorId);

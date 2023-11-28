@@ -6,7 +6,7 @@ module.exports = (app) => {
 	router.post("/", pessoa.adicionar);
 	router.get("/", pessoa.consultarTodos);
 	router.get("/:id", pessoa.consultarPorId);
-	router.put("/:id", pessoa.atualizarPorId);
+	router.put("/:id", pessoa.atualizar);
 	router.delete("/:id", pessoa.removerPorId);
 	router.delete("/", pessoa.removerTodos);
 

@@ -112,8 +112,8 @@ exports.logar = (req, res) => {
 };
 
 // Altera usuário pelo id
-exports.atualizarPorId = (req, res) => {
-	const id = req.params.id;
+exports.atualizar = (req, res) => {
+	const id = req.body.id;
 
 	Usuario.update(req.body, {
 		where: { id: id },
