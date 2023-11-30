@@ -39,16 +39,7 @@ exports.adicionar = (req, res) => {
 
 // Retorna todos os usuários do banco de dados
 exports.consultarTodos = (req, res) => {
-	Usuario.findAll({
-		attributes: [
-			"id",
-			"nomeUsuario",
-			"nivel",
-			"idPessoa",
-			"createdAt",
-			"updatedAt",
-		],
-	})
+	Usuario.findAll()
 		.then((data) => {
 			res.send(data);
 		})
@@ -92,11 +83,8 @@ exports.logar = (req, res) => {
 	const senha = req.body.senha;
 
 	Usuario.findAll({
-		where: { 
-			[Op.and]: [
-				{ nomeUsuario: nomeUsuario}, 
-				{ senha: senha }
-			] 
+		where: {
+			[Op.and]: [{ nomeUsuario: nomeUsuario }, { senha: senha }],
 		},
 	})
 		.then((data) => {

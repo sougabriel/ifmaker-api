@@ -44,6 +44,22 @@ exports.consultarTodos = (req, res) => {
 		});
 };
 
+exports.consultarTodosOrdNome = (req, res) => {
+	Pessoa.findAll({
+		order: ['nome'],
+	})
+		.then((data) => {
+			res.send(data);
+		})
+		.catch((err) => {
+			res.status(500).send({
+				message:
+					err.message ||
+					"\n" + "Falha ao tentar encontrar por pessoas.",
+			});
+		});
+};
+
 exports.consultarPorId = (req, res) => {
 	const id = req.params.id;
 
