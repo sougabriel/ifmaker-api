@@ -1,19 +1,19 @@
 module.exports = (sequelize, Sequelize) => {
 	const Pessoa = sequelize.define("pessoa", {
 		nome: {
-			type: Sequelize.STRING,
+			type: Sequelize.STRING(60),
 			allowNull: false,
 		},
 		email: {
-			type: Sequelize.STRING,
+			type: Sequelize.STRING(100),
 			allowNull: false,
 		},
 		telefone: {
-			type: Sequelize.INTEGER(12),
+			type: Sequelize.STRING(17),
 			allowNull: true,
 		},
 		publico: {
-			type: Sequelize.STRING,
+			type: Sequelize.STRING(120),
 			allowNull: false,
 		},
 	});

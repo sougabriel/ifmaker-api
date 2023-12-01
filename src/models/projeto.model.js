@@ -1,7 +1,7 @@
 module.exports = (sequelize, Sequelize) => {
 	const Projeto = sequelize.define("projeto", {
 		nome: {
-			type: Sequelize.STRING,
+			type: Sequelize.STRING(100),
 			allowNull: false,
 		},
 		descricao: {
