@@ -6,8 +6,8 @@ module.exports = (app) => {
 	router.post("/", pessoaProjeto.adicionar);
 	router.get("/", pessoaProjeto.consultarTodos);
 	router.get("/:id", pessoaProjeto.consultarPorId);
-	router.put("/:pessoaId/:idProjeto", pessoaProjeto.atualizar);
-	router.delete("/:pessoaId/:idProjeto", pessoaProjeto.removerPorId);
+	router.put("/:pessoaId/:projetoId", pessoaProjeto.atualizar);
+	router.delete("/:pessoaId/:projetoId", pessoaProjeto.removerPorId);
 	router.delete("/", pessoaProjeto.removerTodos);
 
 	app.use("/api/pessoa-projeto", router);

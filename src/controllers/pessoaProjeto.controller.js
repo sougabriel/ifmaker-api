@@ -2,7 +2,7 @@ const PessoaProjeto = require("../models/pessoaProjeto.model");
 const { Op } = require("sequelize");
 
 exports.adicionar = (req, res) => {
-	if (!req.body.pessoaId || !req.body.idProjeto) {
+	if (!req.body.pessoaId || !req.body.projetoId) {
 		res.status(400).send({
 			message: "Quaisquer dos campos não podem ser vazios!",
 		});
@@ -11,7 +11,7 @@ exports.adicionar = (req, res) => {
 
 	const pessoaprojeto = {
 		pessoaId: req.body.pessoaId,
-		idProjeto: req.body.idProjeto,
+		projetoId: req.body.projetoId,
 	};
 
 	PessoaProjeto.create(pessoaprojeto)
@@ -66,10 +66,10 @@ exports.consultarPorId = (req, res) => {
 
 exports.atualizar = (req, res) => {
 	const pessoaId = req.params.pessoaId;
-	const idProjeto = req.params.idProjeto;
+	const projetoId = req.params.projetoId;
 
 	PessoaProjeto.update(req.body, {
-		where: { [Op.and]: [{ pessoaId: pessoaId }, { idProjeto: idProjeto }] },
+		where: { [Op.and]: [{ pessoaId: pessoaId }, { projetoId: projetoId }] },
 	})
 		.then((num) => {
 			if (num == 1) {
@@ -93,10 +93,10 @@ exports.atualizar = (req, res) => {
 
 exports.removerPorId = (req, res) => {
 	const pessoaId = req.params.pessoaId;
-	const idProjeto = req.params.idProjeto;
+	const projetoId = req.params.projetoId;
 
 	PessoaProjeto.destroy({
-		where: { [Op.and]: [{ pessoaId: pessoaId }, { idProjeto: idProjeto }] },
+		where: { [Op.and]: [{ pessoaId: pessoaId }, { projetoId: projetoId }] },
 	})
 		.then((num) => {
 			if (num == 1) {
