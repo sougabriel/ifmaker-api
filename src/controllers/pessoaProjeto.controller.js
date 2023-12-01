@@ -2,7 +2,7 @@ const PessoaProjeto = require("../models/pessoaProjeto.model");
 const { Op } = require("sequelize");
 
 exports.adicionar = (req, res) => {
-	if (!req.body.idPessoa || !req.body.idProjeto) {
+	if (!req.body.pessoaId || !req.body.idProjeto) {
 		res.status(400).send({
 			message: "Quaisquer dos campos não podem ser vazios!",
 		});
@@ -10,7 +10,7 @@ exports.adicionar = (req, res) => {
 	}
 
 	const pessoaprojeto = {
-		idPessoa: req.body.idPessoa,
+		pessoaId: req.body.pessoaId,
 		idProjeto: req.body.idProjeto,
 	};
 
@@ -40,7 +40,7 @@ exports.consultarTodos = async (req, res) => {
 };
 
 exports.consultarPorId = (req, res) => {
-	const id = req.params.idPessoa;
+	const id = req.params.pessoaId;
 
 	PessoaProjeto.findByPk(id)
 		.then((data) => {
@@ -65,11 +65,11 @@ exports.consultarPorId = (req, res) => {
 };
 
 exports.atualizar = (req, res) => {
-	const idPessoa = req.params.idPessoa;
+	const pessoaId = req.params.pessoaId;
 	const idProjeto = req.params.idProjeto;
 
 	PessoaProjeto.update(req.body, {
-		where: { [Op.and]: [{ idPessoa: idPessoa }, { idProjeto: idProjeto }] },
+		where: { [Op.and]: [{ pessoaId: pessoaId }, { idProjeto: idProjeto }] },
 	})
 		.then((num) => {
 			if (num == 1) {
@@ -92,11 +92,11 @@ exports.atualizar = (req, res) => {
 };
 
 exports.removerPorId = (req, res) => {
-	const idPessoa = req.params.idPessoa;
+	const pessoaId = req.params.pessoaId;
 	const idProjeto = req.params.idProjeto;
 
 	PessoaProjeto.destroy({
-		where: { [Op.and]: [{ idPessoa: idPessoa }, { idProjeto: idProjeto }] },
+		where: { [Op.and]: [{ pessoaId: pessoaId }, { idProjeto: idProjeto }] },
 	})
 		.then((num) => {
 			if (num == 1) {

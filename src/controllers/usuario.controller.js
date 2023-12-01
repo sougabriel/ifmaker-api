@@ -8,7 +8,7 @@ exports.adicionar = (req, res) => {
 		!req.body.nomeUsuario ||
 		!req.body.senha ||
 		!req.body.nivel ||
-		!req.body.idPessoa
+		!req.body.pessoaId
 	) {
 		res.status(400).send({
 			message: "Quaisquer dos campos não podem ser vazios!",
@@ -21,7 +21,7 @@ exports.adicionar = (req, res) => {
 		nomeUsuario: req.body.nomeUsuario,
 		senha: req.body.senha,
 		nivel: req.body.nivel,
-		idPessoa: req.body.idPessoa,
+		pessoaId: req.body.pessoaId,
 	};
 
 	// Salva usuário no banco de dados

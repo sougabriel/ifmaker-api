@@ -1,7 +1,7 @@
 const Acesso = require("../models/acesso.model");
 
 exports.adicionar = (req, res) => {
-	if (!req.body.dia || !req.body.horaEntrada || !req.body.idPessoa) {
+	if (!req.body.pessoaId) {
 		res.status(400).send({
 			message: "Quaisquer dos campos não podem ser vazios!",
 		});
@@ -9,10 +9,8 @@ exports.adicionar = (req, res) => {
 	}
 
 	const acesso = {
-		dia: req.body.dia,
-		horaEntrada: req.body.horaEntrada,
 		finalidade: req.body.finalidade,
-		idPessoa: req.body.idPessoa,
+		pessoaId: req.body.pessoaId,
 	};
 
 	Acesso.create(acesso)

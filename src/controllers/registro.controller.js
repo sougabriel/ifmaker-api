@@ -1,7 +1,7 @@
 const Registro = require("../models/registro.model");
 
 exports.adicionar = (req, res) => {
-	if (!req.body.atividade || !req.body.descricao || !req.body.idUsuario) {
+	if (!req.body.atividade || !req.body.descricao || !req.body.usuarioId) {
 		res.status(400).send({
 			message: "Quaisquer dos campos não podem ser vazios!",
 		});
@@ -11,7 +11,7 @@ exports.adicionar = (req, res) => {
 	const registro = {
 		atividade: req.body.atividade,
 		descricao: req.body.descricao,
-		idUsuario: req.body.idUsuario,
+		usuarioId: req.body.usuarioId,
 	};
 
 	Registro.create(registro)

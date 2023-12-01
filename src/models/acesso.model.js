@@ -1,26 +1,18 @@
 module.exports = (sequelize, Sequelize) => {
 	const Pessoa = require("./pessoa.model.js");
 	const Acesso = sequelize.define("acesso", {
-		dia: {
-			type: Sequelize.DATEONLY,
-			allowNull: false,
-		},
-		horaEntrada: {
-			type: Sequelize.STRING,
-			allowNull: false,
-		},
         finalidade: {
 			type: Sequelize.TEXT,
 			allowNull: false,
 		},
-		idPessoa: {
+		pessoaId: {
 			type: Sequelize.INTEGER,
 			allowNull: false,
 		},
 	});
 
 	Acesso.belongsTo(Pessoa, {
-		foreignKey: "idPessoa",
+		foreignKey: "pessoaId",
 		allowNull: false,
 	});
 	

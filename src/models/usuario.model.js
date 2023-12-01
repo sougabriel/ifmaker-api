@@ -15,14 +15,14 @@ module.exports = (sequelize, Sequelize) => {
 			allowNull: false,
 			defaultValue: 1,
 		},
-		idPessoa: {
+		pessoaId: {
 			type: Sequelize.INTEGER,
 			allowNull: false,
 		},
 	});
 	
 	Usuario.belongsTo(Pessoa, {
-		foreignKey: "idPessoa",
+		foreignKey: "pessoaId",
 		allowNull: false,
 	});
 

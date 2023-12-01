@@ -2,7 +2,7 @@ const Emprestimo = require("../models/emprestimo.model");
 const { Op } = require("sequelize");
 
 exports.adicionar = (req, res) => {
-	if (!req.body.dataInicial || !req.body.dataFinal || !req.body.finalidade) {
+	if (!req.body.dataInicial || !req.body.dataFinal || !req.body.pessoaId || !req.body.materialId) {
 		res.status(400).send({
 			message: "Quaisquer dos campos não podem ser vazios!",
 		});
@@ -13,6 +13,8 @@ exports.adicionar = (req, res) => {
 		dataInicial: req.body.dataInicial,
 		dataFinal: req.body.dataFinal,
 		finalidade: req.body.finalidade,
+		pessoaId: req.body.pessoaId,
+		materialId: req.body.materialId,
 	};
 
 	Emprestimo.create(emprestimo)
@@ -66,10 +68,11 @@ exports.consultarPorId = (req, res) => {
 };
 
 exports.atualizar = (req, res) => {
-	const id = req.params.id;
+	const pessoaId = req.params.pessoaId;
+	const materialId = req.params.materialId;
 
 	Emprestimo.update(req.body, {
-		where: { id: id },
+		where: { [Op.and]: { pessoaId: pessoaId, materialId: materialId }, },
 	})
 		.then((num) => {
 			if (num == 1) {

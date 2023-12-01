@@ -9,14 +9,14 @@ module.exports = (sequelize, Sequelize) => {
 			type: Sequelize.TEXT,
 			allowNull: false,
 		},
-		idUsuario: {
+		usuarioId: {
 			type: Sequelize.INTEGER,
 			allowNull: false,
 		},
 	});
 
 	Registro.belongsTo(Usuario, {
-		foreignKey: "idUsuario",
+		foreignKey: "usuarioId",
 		allowNull: false,
 	});
 	
