@@ -2,7 +2,7 @@ const Acesso = require("../models/acesso.model");
 const { Op } = require("sequelize");
 
 exports.adicionar = (req, res) => {
-	if (!req.body.pessoaId) {
+	if ( !req.body.diaHoraEntrada || !req.body.pessoaId) {
 		res.status(400).send({
 			message: "Quaisquer dos campos não podem ser vazios!",
 		});
@@ -10,6 +10,7 @@ exports.adicionar = (req, res) => {
 	}
 
 	const acesso = {
+		diaHoraEntrada: req.body.diaHoraEntrada,
 		finalidade: req.body.finalidade,
 		pessoaId: req.body.pessoaId,
 	};
@@ -42,7 +43,7 @@ exports.consultarPorData = (req, res) => {
 	const data = req.params.data;
 
 	Acesso.findAll({
-		where: { diaHoraEntrada: { [Op.eq]: `${data}` } } 
+		where: { [Op.like]: { diaHoraEntrada: `%${data}%` } } 
 	})
 		.then((data) => {
 			if (data) {
