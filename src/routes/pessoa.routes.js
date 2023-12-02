@@ -5,6 +5,8 @@ module.exports = (app) => {
 
 	router.post("/", pessoa.adicionar);
 	router.get("/", pessoa.consultarTodos);
+	router.get("/:nome", pessoa.consultarPorNome);
+	router.get("/p/:publico", pessoa.consultarPorPublico);
 	router.get("/:id", pessoa.consultarPorId);
 	router.put("/:id", pessoa.atualizar);
 	router.delete("/:id", pessoa.removerPorId);

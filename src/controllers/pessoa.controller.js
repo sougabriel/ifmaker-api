@@ -46,7 +46,7 @@ exports.consultarTodos = (req, res) => {
 
 exports.consultarTodosOrdNome = (req, res) => {
 	Pessoa.findAll({
-		order: ['nome'],
+		order: ["nome"],
 	})
 		.then((data) => {
 			res.send(data);
@@ -88,7 +88,7 @@ exports.consultarPorId = (req, res) => {
 exports.consultarPorNome = (req, res) => {
 	const nome = req.params.nome;
 
-	Pessoa.findAll({ where: { nome: { [Op.like]: "%" + nome + "%" } } })
+	Pessoa.findAll({ where: { nome: { [Op.like]: `%${nome}%` } } })
 		.then((data) => {
 			if (data) {
 				res.send(data);
@@ -106,6 +106,27 @@ exports.consultarPorNome = (req, res) => {
 						"Erro ao tentar encontrar pessoa com id = " +
 						id +
 						".",
+			});
+		});
+};
+
+exports.consultarPorPublico = (req, res) => {
+	const publico = req.params.publico;
+
+	Pessoa.findAll({ where: { publico: { [Op.like]: `%${publico}%` } } })
+		.then((data) => {
+			if (data) {
+				res.send(data);
+			} else {
+				res.status(404).send({
+					message: `Não foi possível encontrar pessoa.`,
+				});
+			}
+		})
+		.catch((err) => {
+			res.status(500).send({
+				message:
+					err.message || "\n" + "Erro ao tentar encontrar pessoa.",
 			});
 		});
 };
