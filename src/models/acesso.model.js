@@ -1,7 +1,11 @@
 module.exports = (sequelize, Sequelize) => {
 	const Pessoa = require("./pessoa.model.js");
 	const Acesso = sequelize.define("acesso", {
-        finalidade: {
+        diaHoraEntrada: {
+			type: Sequelize.DATE,
+			allowNull: false,
+		},
+		finalidade: {
 			type: Sequelize.TEXT,
 			allowNull: false,
 		},

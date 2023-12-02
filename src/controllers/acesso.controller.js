@@ -1,4 +1,5 @@
 const Acesso = require("../models/acesso.model");
+const { Op } = require("sequelize");
 
 exports.adicionar = (req, res) => {
 	if (!req.body.pessoaId) {
@@ -37,16 +38,18 @@ exports.consultarTodos = async (req, res) => {
 	}
 };
 
-exports.consultarPorId = (req, res) => {
-	const id = req.params.id;
+exports.consultarPorData = (req, res) => {
+	const data = req.params.data;
 
-	Acesso.findByPk(id)
+	Acesso.findAll({
+		where: { diaHoraEntrada: { [Op.eq]: `${data}` } } 
+	})
 		.then((data) => {
 			if (data) {
 				res.send(data);
 			} else {
 				res.status(404).send({
-					message: `Não foi possível encontrar acesso com id = ${id}.`,
+					message: `Não foi possível encontrar acesso.`,
 				});
 			}
 		})
@@ -55,9 +58,7 @@ exports.consultarPorId = (req, res) => {
 				message:
 					err.message ||
 					"\n" +
-						"Erro ao tentar encontrar acesso com id = " +
-						id +
-						".",
+						"Erro ao tentar encontrar acesso.",
 			});
 		});
 };

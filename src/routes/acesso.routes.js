@@ -5,7 +5,7 @@ module.exports = (app) => {
 
 	router.post("/", acesso.adicionar);
 	router.get("/", acesso.consultarTodos);
-	router.get("/:id", acesso.consultarPorId);
+	router.get("/:data", acesso.consultarPorData);
 	router.put("/:id", acesso.atualizarPorId);
 	router.delete("/:id", acesso.removerPorId);
 	router.delete("/", acesso.removerTodos);
