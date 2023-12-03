@@ -88,13 +88,13 @@ exports.consultarPorId = (req, res) => {
 exports.consultarPorNome = (req, res) => {
 	const nome = req.params.nome;
 
-	Pessoa.findAll({ where: { nome: { [Op.like]: `%${nome}%` } } })
+	Pessoa.findAll({ where: { nome: { [Op.substring]: nome } } })
 		.then((data) => {
 			if (data) {
 				res.send(data);
 			} else {
 				res.status(404).send({
-					message: `Não foi possível encontrar pessoa com id = ${id}.`,
+					message: `Não foi possível encontrar pessoa.`,
 				});
 			}
 		})
@@ -103,9 +103,30 @@ exports.consultarPorNome = (req, res) => {
 				message:
 					err.message ||
 					"\n" +
-						"Erro ao tentar encontrar pessoa com id = " +
-						id +
-						".",
+						"Erro ao tentar encontrar pessoa.",
+			});
+		});
+};
+
+exports.consultarPorEmail = (req, res) => {
+	const email = req.params.email;
+
+	Pessoa.findAll({ where: { email: { [Op.substring]: email } } })
+		.then((data) => {
+			if (data) {
+				res.send(data);
+			} else {
+				res.status(404).send({
+					message: `Não foi possível encontrar pessoa.`,
+				});
+			}
+		})
+		.catch((err) => {
+			res.status(500).send({
+				message:
+					err.message ||
+					"\n" +
+						"Erro ao tentar encontrar pessoa.",
 			});
 		});
 };
@@ -113,7 +134,7 @@ exports.consultarPorNome = (req, res) => {
 exports.consultarPorPublico = (req, res) => {
 	const publico = req.params.publico;
 
-	Pessoa.findAll({ where: { publico: { [Op.like]: `%${publico}%` } } })
+	Pessoa.findAll({ where: { publico: { [Op.substring]: publico } } })
 		.then((data) => {
 			if (data) {
 				res.send(data);

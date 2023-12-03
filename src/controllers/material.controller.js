@@ -69,24 +69,20 @@ exports.consultarPorId = (req, res) => {
 exports.consultarPorNome = (req, res) => {
 	const nome = req.params.nome;
 
-	Material.findAll({ where: { nome: { [Op.like]: "%" + nome + "%" } } })
+	Material.findAll({ where: { nome: { [Op.substring]: nome } } })
 		.then((data) => {
 			if (data) {
 				res.send(data);
 			} else {
 				res.status(404).send({
-					message: `Não foi possível encontrar material com id = ${id}.`,
+					message: `Não foi possível encontrar material.`,
 				});
 			}
 		})
 		.catch((err) => {
 			res.status(500).send({
 				message:
-					err.message ||
-					"\n" +
-						"Erro ao tentar encontrar material com id = " +
-						id +
-						".",
+					err.message || "\n" + "Erro ao tentar encontrar material.",
 			});
 		});
 };
@@ -94,24 +90,20 @@ exports.consultarPorNome = (req, res) => {
 exports.consultarPorTipo = (req, res) => {
 	const tipo = req.params.tipo;
 
-	Material.findAll({ where: { tipo: { [Op.like]: "%" + tipo + "%" } } })
+	Material.findAll({ where: { tipo: { [Op.substring]: tipo } } })
 		.then((data) => {
 			if (data) {
 				res.send(data);
 			} else {
 				res.status(404).send({
-					message: `Não foi possível encontrar material com id = ${id}.`,
+					message: `Não foi possível encontrar material.`,
 				});
 			}
 		})
 		.catch((err) => {
 			res.status(500).send({
 				message:
-					err.message ||
-					"\n" +
-						"Erro ao tentar encontrar material com id = " +
-						id +
-						".",
+					err.message || "\n" + "Erro ao tentar encontrar material.",
 			});
 		});
 };

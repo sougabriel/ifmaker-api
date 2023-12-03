@@ -40,6 +40,29 @@ exports.consultarTodos = (req, res) => {
 		});
 };
 
+exports.consultarPorNome = (req, res) => {
+	const nome = req.params.nome;
+
+	Projeto.findAll({ where: { nome: { [Op.substring]: nome } } })
+		.then((data) => {
+			if (data) {
+				res.send(data);
+			} else {
+				res.status(404).send({
+					message: `Não foi possível encontrar pessoa.`,
+				});
+			}
+		})
+		.catch((err) => {
+			res.status(500).send({
+				message:
+					err.message ||
+					"\n" +
+						"Erro ao tentar encontrar pessoa.",
+			});
+		});
+};
+
 exports.consultarPorId = (req, res) => {
 	const id = req.params.id;
 

@@ -7,6 +7,7 @@ module.exports = (app) => {
 	router.get("/", pessoa.consultarTodos);
 	router.get("/:nome", pessoa.consultarPorNome);
 	router.get("/p/:publico", pessoa.consultarPorPublico);
+	router.get("/e/:email", pessoa.consultarPorEmail);
 	router.get("/:id", pessoa.consultarPorId);
 	router.put("/:id", pessoa.atualizar);
 	router.delete("/:id", pessoa.removerPorId);
