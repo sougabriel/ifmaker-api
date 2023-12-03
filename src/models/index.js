@@ -23,10 +23,8 @@ db.sequelize = sequelize;
 db.projeto = require("./projeto.model.js")(sequelize, Sequelize);
 db.pessoa = require("./pessoa.model.js")(sequelize, Sequelize);
 db.material = require("./material.model.js")(sequelize, Sequelize);
-db.pessoaProjeto = require("./pessoaProjeto.model.js")(sequelize, Sequelize);
 db.emprestimo = require("./emprestimo.model.js")(sequelize, Sequelize);
 db.usuario = require("./usuario.model.js")(sequelize, Sequelize);
-db.registro = require("./registro.model.js")(sequelize, Sequelize);
 db.acesso = require("./acesso.model.js")(sequelize, Sequelize);
 
 module.exports = db;
