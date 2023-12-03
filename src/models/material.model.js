@@ -8,10 +8,6 @@ module.exports = (sequelize, Sequelize) => {
 			type: Sequelize.STRING(100),
 			allowNull: false,
 		},
-		quantidade: {
-			type: Sequelize.INTEGER,
-			allowNull: false,
-		},
 		descricao: {
 			type: Sequelize.TEXT,
 			allowNull: true,

@@ -2,7 +2,7 @@ const Emprestimo = require("../models/emprestimo.model");
 const { Op } = require("sequelize");
 
 exports.adicionar = (req, res) => {
-	if (!req.body.dataInicial || !req.body.dataFinal || !req.body.pessoaId || !req.body.materialId) {
+	if (!req.body.dataInicial || !req.body.dataFinal || !req.body.quantidade || !req.body.pessoaId || !req.body.materialId) {
 		res.status(400).send({
 			message: "Quaisquer dos campos não podem ser vazios!",
 		});
@@ -13,6 +13,7 @@ exports.adicionar = (req, res) => {
 		dataInicial: req.body.dataInicial,
 		dataFinal: req.body.dataFinal,
 		finalidade: req.body.finalidade,
+		quantidade: req.body.quantidade,
 		pessoaId: req.body.pessoaId,
 		materialId: req.body.materialId,
 	};
@@ -95,6 +96,52 @@ exports.consultarPorDataFinal = (req, res) => {
 
 	Emprestimo.findAll({
 		where: { dataFinal: { [Op.substring]: dataFinal } },
+	})
+		.then((data) => {
+			if (data) {
+				res.send(data);
+			} else {
+				res.status(404).send({
+					message: `Não foi possível encontrar acesso.`,
+				});
+			}
+		})
+		.catch((err) => {
+			res.status(500).send({
+				message:
+					err.message || "\n" + "Erro ao tentar encontrar acesso.",
+			});
+		});
+};
+
+exports.consultarPorPessoa = (req, res) => {
+	const pesssoaId = req.params.pesssoaId;
+
+	Emprestimo.findAll({
+		where: { pesssoaId: { [Op.eq]: pesssoaId } },
+	})
+		.then((data) => {
+			if (data) {
+				res.send(data);
+			} else {
+				res.status(404).send({
+					message: `Não foi possível encontrar acesso.`,
+				});
+			}
+		})
+		.catch((err) => {
+			res.status(500).send({
+				message:
+					err.message || "\n" + "Erro ao tentar encontrar acesso.",
+			});
+		});
+};
+
+exports.consultarPorMaterial = (req, res) => {
+	const materialId = req.params.materialId;
+
+	Emprestimo.findAll({
+		where: { materialId: { [Op.eq]: materialId } },
 	})
 		.then((data) => {
 			if (data) {

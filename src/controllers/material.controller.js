@@ -2,7 +2,7 @@ const Material = require("../models/material.model");
 const { Op } = require("sequelize");
 
 exports.adicionar = (req, res) => {
-	if (!req.body.nome || !req.body.tipo || !req.body.quantidade) {
+	if (!req.body.nome || !req.body.tipo) {
 		res.status(400).send({
 			message: "Quaisquer dos campos não podem ser vazios!",
 		});
@@ -12,7 +12,6 @@ exports.adicionar = (req, res) => {
 	const material = {
 		nome: req.body.nome,
 		tipo: req.body.tipo,
-		quantidade: req.body.quantidade,
 		descricao: req.body.descricao,
 	};
 

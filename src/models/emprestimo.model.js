@@ -13,6 +13,10 @@ module.exports = (sequelize, Sequelize) => {
         finalidade: {
             type: Sequelize.TEXT,
             allowNull: true,
+        },
+        quantidade: {
+            type: Sequelize.INTEGER,
+            allowNull: true,
         }
 	});
 

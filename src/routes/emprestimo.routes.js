@@ -8,6 +8,8 @@ module.exports = (app) => {
 	router.get("/:id", emprestimo.consultarPorId);
 	router.get("/data/i/:dataInicial", emprestimo.consultarPorDataInicial);
 	router.get("/data/f/:dataFinal", emprestimo.consultarPorDataFinal);
+	router.get("/pessoa/:pessoaId", emprestimo.consultarPorPessoa);
+	router.get("/material/:materialId", emprestimo.consultarPorMaterial);
 	router.put("/:id", emprestimo.atualizar);
 	router.delete("/:id", emprestimo.removerPorId);
 	router.delete("/", emprestimo.removerTodos);
