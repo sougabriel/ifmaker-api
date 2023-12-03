@@ -40,7 +40,7 @@ exports.consultarTodos = async (req, res) => {
 exports.consultarTodosOrdData = async (req, res) => {
 	try {
 		const acesso = await Acesso.findAll({
-			order: [ ['diaHoraEntrada', 'ASC'], ],
+			order: [ ['diaHoraEntrada', 'DESC'], ],
 		});
 		res.send(acesso);
 	} catch (err) {
@@ -55,7 +55,7 @@ exports.consultarPorData = (req, res) => {
 	const data = req.params.data;
 
 	Acesso.findAll({
-		where: { [Op.like]: { diaHoraEntrada: `%${data}%` } },
+		where: { diaHoraEntrada: { [Op.substring]: data } },
 	})
 		.then((data) => {
 			if (data) {

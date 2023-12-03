@@ -67,6 +67,52 @@ exports.consultarPorId = (req, res) => {
 		});
 };
 
+exports.consultarPorDataInicial = (req, res) => {
+	const dataInicial = req.params.dataInicial;
+
+	Emprestimo.findAll({
+		where: { dataInicial: { [Op.substring]: dataInicial } },
+	})
+		.then((data) => {
+			if (data) {
+				res.send(data);
+			} else {
+				res.status(404).send({
+					message: `Não foi possível encontrar acesso.`,
+				});
+			}
+		})
+		.catch((err) => {
+			res.status(500).send({
+				message:
+					err.message || "\n" + "Erro ao tentar encontrar acesso.",
+			});
+		});
+};
+
+exports.consultarPorDataFinal = (req, res) => {
+	const dataFinal = req.params.dataFinal;
+
+	Emprestimo.findAll({
+		where: { dataFinal: { [Op.substring]: dataFinal } },
+	})
+		.then((data) => {
+			if (data) {
+				res.send(data);
+			} else {
+				res.status(404).send({
+					message: `Não foi possível encontrar acesso.`,
+				});
+			}
+		})
+		.catch((err) => {
+			res.status(500).send({
+				message:
+					err.message || "\n" + "Erro ao tentar encontrar acesso.",
+			});
+		});
+};
+
 exports.atualizar = (req, res) => {
 	const pessoaId = req.params.pessoaId;
 	const materialId = req.params.materialId;
