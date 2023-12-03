@@ -2,19 +2,17 @@ const Acesso = require("../models/acesso.model");
 const { Op } = require("sequelize");
 
 exports.adicionar = (req, res) => {
-	if ( !req.body.diaHoraEntrada || !req.body.pessoaId) {
+	if (!req.body.diaHoraEntrada || !req.body.pessoaId) {
 		res.status(400).send({
 			message: "Quaisquer dos campos não podem ser vazios!",
 		});
 		return;
 	}
-
 	const acesso = {
 		diaHoraEntrada: req.body.diaHoraEntrada,
 		finalidade: req.body.finalidade,
 		pessoaId: req.body.pessoaId,
 	};
-
 	Acesso.create(acesso)
 		.then((data) => {
 			res.send(data);
@@ -39,11 +37,25 @@ exports.consultarTodos = async (req, res) => {
 	}
 };
 
+exports.consultarTodosOrdData = async (req, res) => {
+	try {
+		const acesso = await Acesso.findAll({
+			order: [ ['diaHoraEntrada', 'ASC'], ],
+		});
+		res.send(acesso);
+	} catch (err) {
+		console.error(err);
+		res.status(500).send({
+			message: "Erro ao recuperar acesso",
+		});
+	}
+};
+
 exports.consultarPorData = (req, res) => {
 	const data = req.params.data;
 
 	Acesso.findAll({
-		where: { [Op.like]: { diaHoraEntrada: `%${data}%` } } 
+		where: { [Op.like]: { diaHoraEntrada: `%${data}%` } },
 	})
 		.then((data) => {
 			if (data) {
@@ -57,14 +69,35 @@ exports.consultarPorData = (req, res) => {
 		.catch((err) => {
 			res.status(500).send({
 				message:
-					err.message ||
-					"\n" +
-						"Erro ao tentar encontrar acesso.",
+					err.message || "\n" + "Erro ao tentar encontrar acesso.",
 			});
 		});
 };
 
-exports.atualizarPorId = (req, res) => {
+exports.consultarPorPessoa = (req, res) => {
+	const pessoaId = req.params.pessoaId;
+
+	Acesso.findAll({
+		where: { pessoaId: pessoaId },
+	})
+		.then((data) => {
+			if (data) {
+				res.send(data);
+			} else {
+				res.status(404).send({
+					message: `Não foi possível encontrar acesso.`,
+				});
+			}
+		})
+		.catch((err) => {
+			res.status(500).send({
+				message:
+					err.message || "\n" + "Erro ao tentar encontrar acesso.",
+			});
+		});
+};
+
+exports.atualizar = (req, res) => {
 	const id = req.params.id;
 
 	Acesso.update(req.body, {
@@ -112,25 +145,6 @@ exports.removerPorId = (req, res) => {
 				message:
 					err.message ||
 					"\n" + "Erro ao remover acesso com id = " + id + ".",
-			});
-		});
-};
-
-exports.removerTodos = (req, res) => {
-	Acesso.destroy({
-		where: {},
-		truncate: false,
-	})
-		.then((nums) => {
-			res.send({
-				message: `${nums} acessos removidos com sucesso!`,
-			});
-		})
-		.catch((err) => {
-			res.status(500).send({
-				message:
-					err.message ||
-					"\n" + "Erro ao tentar remover todos os acessos.",
 			});
 		});
 };
