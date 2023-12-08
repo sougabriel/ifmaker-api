@@ -27,7 +27,11 @@ exports.adicionar = (req, res) => {
 };
 
 exports.consultarTodos = (req, res) => {
-	Projeto.findAll()
+	Projeto.findAll({
+		order: [
+			['createdAt', 'DESC'],
+		]
+	})
 		.then((data) => {
 			res.send(data);
 		})

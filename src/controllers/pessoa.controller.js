@@ -31,7 +31,11 @@ exports.adicionar = (req, res) => {
 };
 
 exports.consultarTodos = (req, res) => {
-	Pessoa.findAll()
+	Pessoa.findAll({
+		order: [
+			['createdAt', 'DESC'],
+		]
+	})
 		.then((data) => {
 			res.send(data);
 		})

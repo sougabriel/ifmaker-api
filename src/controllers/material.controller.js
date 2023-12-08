@@ -30,7 +30,11 @@ exports.adicionar = (req, res) => {
 
 exports.consultarTodos = async (req, res) => {
 	try {
-		const material = await Material.findAll();
+		const material = await Material.findAll({
+			order: [
+				['createdAt', 'DESC'],
+			]
+		});
 		res.send(material);
 	} catch (err) {
 		console.error(err);

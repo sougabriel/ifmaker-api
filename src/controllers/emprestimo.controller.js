@@ -33,7 +33,11 @@ exports.adicionar = (req, res) => {
 
 exports.consultarTodos = async (req, res) => {
 	try {
-		const emprestimo = await Emprestimo.findAll();
+		const emprestimo = await Emprestimo.findAll({
+			order: [
+				['createdAt', 'DESC'],
+			]
+		});
 		res.send(emprestimo);
 	} catch (err) {
 		console.error(err);

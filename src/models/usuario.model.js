@@ -13,7 +13,6 @@ module.exports = (sequelize, Sequelize) => {
 		nivel: {
 			type: Sequelize.INTEGER(1),
 			allowNull: false,
-			defaultValue: 2,
 		},
 		pessoaId: {
 			type: Sequelize.INTEGER,

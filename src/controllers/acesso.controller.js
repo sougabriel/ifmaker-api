@@ -27,7 +27,11 @@ exports.adicionar = (req, res) => {
 
 exports.consultarTodos = async (req, res) => {
 	try {
-		const acesso = await Acesso.findAll();
+		const acesso = await Acesso.findAll({
+			order: [
+				['createdAt', 'DESC'],
+			]
+		});
 		res.send(acesso);
 	} catch (err) {
 		console.error(err);
