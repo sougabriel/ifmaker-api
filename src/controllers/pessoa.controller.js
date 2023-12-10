@@ -2,22 +2,18 @@ const Pessoa = require("../models/pessoa.model");
 const { Op } = require("sequelize");
 
 exports.adicionar = (req, res) => {
-	// Validação dos Campos
-	if (!req.body.nome) {
+	if (!req.body.nome || !req.body.email || !req.body.publico) {
 		res.status(400).send({
 			message: "Quaisquer dos campos não podem ser vazios!",
 		});
 		return;
 	}
-
 	const pessoa = {
-		// campos de requisição
 		nome: req.body.nome,
 		email: req.body.email,
 		telefone: req.body.telefone,
 		publico: req.body.publico,
 	};
-
 	Pessoa.create(pessoa)
 		.then((data) => {
 			res.send(data);
@@ -25,7 +21,7 @@ exports.adicionar = (req, res) => {
 		.catch((err) => {
 			res.status(500).send({
 				message:
-					err.message || "\n" + "Falha ao tentar criar nova pessoa.",
+					err.message || "Falha ao tentar criar nova pessoa.",
 			});
 		});
 };
@@ -169,7 +165,8 @@ exports.atualizar = (req, res) => {
 				});
 			} else {
 				res.send({
-					message: `Não foi possível alterar pessoa com id = ${id}. Talvez a pessoa não exista ou a requisição esteja vazia!`,
+					message: `Não foi possível alterar pessoa com id = ${id}. 
+					Talvez a pessoa não exista ou a requisição esteja vazia!`,
 				});
 			}
 		})
@@ -195,7 +192,8 @@ exports.removerPorId = (req, res) => {
 				});
 			} else {
 				res.send({
-					message: `Não foi possível remover pessoa com id = ${id}. Talvez a pessoa não exista ou a requisição esteja vazia!`,
+					message: `Não foi possível remover pessoa com id = ${id}. 
+					Talvez a pessoa não exista ou a requisição esteja vazia!`,
 				});
 			}
 		})
