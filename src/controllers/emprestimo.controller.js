@@ -119,10 +119,10 @@ exports.consultarPorDataFinal = (req, res) => {
 };
 
 exports.consultarPorPessoa = (req, res) => {
-	const pesssoaId = req.params.pesssoaId;
+	const pessoaId = req.params.pessoaId;
 
 	Emprestimo.findAll({
-		where: { pesssoaId: { [Op.eq]: pesssoaId } },
+		where: { pessoaId: { [Op.eq]: pessoaId } },
 	})
 		.then((data) => {
 			if (data) {
