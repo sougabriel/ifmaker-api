@@ -10,7 +10,6 @@ module.exports = (app) => {
 	router.get("/t/:tipo", material.consultarPorTipo);
 	router.put("/:id", material.atualizar);
 	router.delete("/:id", material.removerPorId);
-	router.delete("/", material.removerTodos);
 
 	app.use("/api/material", router);
 };

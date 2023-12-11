@@ -9,7 +9,6 @@ module.exports = (app) => {
 	router.get("/:id", projeto.consultarPorId);
 	router.put("/:id", projeto.atualizarPorId);
 	router.delete("/:id", projeto.removerPorId);
-	router.delete("/", projeto.removerTodos);
 
 	app.use("/api/projeto", router);
 };

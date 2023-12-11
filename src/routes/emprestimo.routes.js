@@ -12,7 +12,6 @@ module.exports = (app) => {
 	router.get("/material/:materialId", emprestimo.consultarPorMaterial);
 	router.put("/:id", emprestimo.atualizar);
 	router.delete("/:id", emprestimo.removerPorId);
-	router.delete("/", emprestimo.removerTodos);
 
 	app.use("/api/emprestimo", router);
 };

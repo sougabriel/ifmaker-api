@@ -11,7 +11,6 @@ module.exports = (app) => {
 	router.get("/:id", pessoa.consultarPorId);
 	router.put("/:id", pessoa.atualizar);
 	router.delete("/:id", pessoa.removerPorId);
-	router.delete("/", pessoa.removerTodos);
 
 	app.use("/api/pessoa", router);
 };

@@ -11,7 +11,6 @@ module.exports = (app) => {
 
 	// Retorna um único usuário pelo id
 	router.get("/:id", usuario.consultarPorId);
-
 	router.post("/login", usuario.logar);
 
 	// Altera usuário pelo id
@@ -19,9 +18,6 @@ module.exports = (app) => {
 
 	// Remove usuário pelo id
 	router.delete("/:id", usuario.removerPorId);
-
-	// Remove todos os usuários
-	router.delete("/", usuario.removerTodos);
 
 	app.use("/api/usuario", router);
 };
