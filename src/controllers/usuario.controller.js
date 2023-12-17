@@ -1,9 +1,11 @@
 const Usuario = require("../models/usuario.model");
+
+// Usado para realizar operações como AND, OR, LIKE, etc
 const { Op } = require("sequelize");
 
-// Cria um novo usuário
+// Método para adicionar um registro no banco de dados
 exports.adicionar = (req, res) => {
-	// Validação dos campos
+	// Verifica se os campos de requisição são nulos/vazios
 	if (
 		!req.body.nomeUsuario ||
 		!req.body.senha ||
@@ -15,24 +17,21 @@ exports.adicionar = (req, res) => {
 		});
 		return;
 	}
-
-	// Cria usuário
+	// Cria o registro
 	const usuario = {
 		nomeUsuario: req.body.nomeUsuario,
 		senha: req.body.senha,
 		nivel: req.body.nivel,
 		pessoaId: req.body.pessoaId,
 	};
-
-	// Salva usuário no banco de dados
+	// Inseri o registro no banco
 	Usuario.create(usuario)
 		.then((data) => {
 			res.send(data);
 		})
 		.catch((err) => {
 			res.status(500).send({
-				message:
-					err.message || "\n" + "Falha ao tentar criar novo usuário.",
+				message: err.message || `Falha ao tentar criar novo usuário.`,
 			});
 		});
 };
@@ -49,9 +48,7 @@ exports.consultarTodos = (req, res) => {
 		})
 		.catch((err) => {
 			res.status(500).send({
-				message:
-					err.message ||
-					"\n" + "Falha ao tentar encontrar por usuários.",
+				message: err.message || `Falha ao tentar encontrar por usuários.`,
 			});
 		});
 };
@@ -59,7 +56,6 @@ exports.consultarTodos = (req, res) => {
 // Retorna um único usuário pelo id
 exports.consultarPorId = (req, res) => {
 	const id = req.params.id;
-
 	Usuario.findByPk(id)
 		.then((data) => {
 			if (data) {
@@ -72,22 +68,18 @@ exports.consultarPorId = (req, res) => {
 		})
 		.catch((err) => {
 			res.status(500).send({
-				message:
-					err.message ||
-					"\n" +
-						"Erro ao tentar encontrar usuário com id = " +
-						id +
-						".",
+				message: err.message || `Erro ao tentar encontrar usuário com id = ${id}.`,
 			});
 		});
 };
 
+// Método para verificar login do usuário
 exports.logar = (req, res) => {
 	const nomeUsuario = req.body.nomeUsuario;
 	const senha = req.body.senha;
-
 	Usuario.findAll({
 		where: {
+			// Seleciona usuário com os campos correspondentes à requisição
 			[Op.and]: [{ nomeUsuario: nomeUsuario }, { senha: senha }],
 		},
 	})
@@ -96,9 +88,7 @@ exports.logar = (req, res) => {
 		})
 		.catch((err) => {
 			res.status(500).send({
-				message:
-					err.message ||
-					"\n" + "Falha ao tentar encontrar por usuários.",
+				message: err.message || `Falha ao tentar encontrar por usuários.`,
 			});
 		});
 };
@@ -117,15 +107,14 @@ exports.atualizar = (req, res) => {
 				});
 			} else {
 				res.send({
-					message: `Não foi possível alterar usuário com id = ${id}. Talvez o usuário não exista ou a requisição esteja vazia!`,
+					message: `Não foi possível alterar usuário com id = ${id}. 
+					Talvez o usuário não exista ou a requisição esteja vazia!`,
 				});
 			}
 		})
 		.catch((err) => {
 			res.status(500).send({
-				message:
-					err.message ||
-					"\n" + "Erro ao alterar usuário com id = " + id + ".",
+				message: err.message || `Erro ao alterar usuário com id = ${id}.`,
 			});
 		});
 };
@@ -133,7 +122,6 @@ exports.atualizar = (req, res) => {
 // Remove usuário pelo id
 exports.removerPorId = (req, res) => {
 	const id = req.params.id;
-
 	Usuario.destroy({
 		where: { id: id },
 	})
@@ -144,15 +132,14 @@ exports.removerPorId = (req, res) => {
 				});
 			} else {
 				res.send({
-					message: `Não foi possível remover usuário com id = ${id}. Talvez o usuário não exista ou a requisição esteja vazia!`,
+					message: `Não foi possível remover usuário com id = ${id}. 
+					Talvez o usuário não exista ou a requisição esteja vazia!`,
 				});
 			}
 		})
 		.catch((err) => {
 			res.status(500).send({
-				message:
-					err.message ||
-					"\n" + "Erro ao remover usuário com id = " + id + ".",
+				message: err.message || `Erro ao remover usuário com id = ${id}.`,
 			});
 		});
 };
@@ -164,13 +151,13 @@ exports.removerTodos = (req, res) => {
 		truncate: false,
 	})
 		.then((nums) => {
-			res.send({ message: `${nums} usuários removidos com sucesso!` });
+			res.send({ 
+				message: `${nums} usuários removidos com sucesso!`
+			});
 		})
 		.catch((err) => {
 			res.status(500).send({
-				message:
-					err.message ||
-					"\n" + "Erro ao tentar remover todos os usuários.",
+				message: err.message || `Erro ao tentar remover todos os usuários.`,
 			});
 		});
 };

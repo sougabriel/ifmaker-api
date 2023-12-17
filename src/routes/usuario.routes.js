@@ -3,21 +3,22 @@ module.exports = (app) => {
 
 	var router = require("express").Router();
 
-	// Cria um novo usuário
+	// Rota para criar
 	router.post("/", usuario.adicionar);
 
-	// Retorna todos os usuários
+	// Rotas para consultar
 	router.get("/", usuario.consultarTodos);
-
-	// Retorna um único usuário pelo id
 	router.get("/:id", usuario.consultarPorId);
+
+	// Rota para logar
 	router.post("/login", usuario.logar);
 
-	// Altera usuário pelo id
+	// Rota para alterar
 	router.put("/:id", usuario.atualizar);
 
-	// Remove usuário pelo id
+	// Rota para remover
 	router.delete("/:id", usuario.removerPorId);
 
+	// Rota raiz para as requisições
 	app.use("/api/usuario", router);
 };

@@ -1,33 +1,38 @@
 const Projeto = require("../models/projeto.model");
+
+// Usado para realizar operações como AND, OR, LIKE, etc
 const { Op } = require("sequelize");
 
+// Método para adicionar um registro no banco de dados
 exports.adicionar = (req, res) => {
+	// Verifica se os campos de requisição são nulos/vazios
 	if (!req.body.nome) {
 		res.status(400).send({
 			message: "Quaisquer dos campos não podem ser vazios!",
 		});
 		return;
 	}
-
+	// Cria o registro
 	const projeto = {
 		nome: req.body.nome,
 		descricao: req.body.descricao,
 	};
-
+	// Inseri o registro no banco
 	Projeto.create(projeto)
 		.then((data) => {
 			res.send(data);
 		})
 		.catch((err) => {
 			res.status(500).send({
-				message:
-					err.message || "\n" + "Falha ao tentar criar novo projeto.",
+				message: err.message || `Falha ao tentar criar novo projeto.`,
 			});
 		});
 };
 
+// Método para consultar todos os registros no banco de dados
 exports.consultarTodos = (req, res) => {
 	Projeto.findAll({
+		// Ordena a lista de registro pelos últimos inseridos
 		order: [
 			['createdAt', 'DESC'],
 		]
@@ -37,17 +42,18 @@ exports.consultarTodos = (req, res) => {
 		})
 		.catch((err) => {
 			res.status(500).send({
-				message:
-					err.message ||
-					"\n" + "Falha ao tentar encontrar por projetos.",
+				message: err.message || `Falha ao tentar encontrar por projetos.`,
 			});
 		});
 };
 
+// Consulta todos os registros pelo campo nome enviado na requisição
 exports.consultarPorNome = (req, res) => {
 	const nome = req.params.nome;
-
-	Projeto.findAll({ where: { nome: { [Op.substring]: nome } } })
+	Projeto.findAll({ where: { 
+		// Seleciona os registros de contém a requisição
+		nome: { [Op.substring]: nome } 
+	} })
 		.then((data) => {
 			if (data) {
 				res.send(data);
@@ -59,17 +65,14 @@ exports.consultarPorNome = (req, res) => {
 		})
 		.catch((err) => {
 			res.status(500).send({
-				message:
-					err.message ||
-					"\n" +
-						"Erro ao tentar encontrar pessoa.",
+				message: err.message || `Erro ao tentar encontrar pessoa.`,
 			});
 		});
 };
 
+// Consulta um registro pelo id envido na requisição
 exports.consultarPorId = (req, res) => {
 	const id = req.params.id;
-
 	Projeto.findByPk(id)
 		.then((data) => {
 			if (data) {
@@ -82,20 +85,18 @@ exports.consultarPorId = (req, res) => {
 		})
 		.catch((err) => {
 			res.status(500).send({
-				message:
-					err.message ||
-					"\n" +
-						"Erro ao tentar encontrar projeto com id = " +
-						id +
-						".",
+				message: err.message || `"Erro ao tentar encontrar projeto com id = ${id}.`,
 			});
 		});
 };
 
+// Consulta todos os registros pelo campo nome enviado na requisição
 exports.consultarPorNome = (req, res) => {
 	const nome = req.params.nome;
-
-	Projeto.findAll({ where: { nome: { [Op.like]: "%" + nome + "%" } } })
+	Projeto.findAll({ where: { 
+		// Seleciona os registros que comtém a requisição
+		nome: { [Op.like]: "%" + nome + "%" } 
+	} })
 		.then((data) => {
 			if (data) {
 				res.send(data);
@@ -107,19 +108,14 @@ exports.consultarPorNome = (req, res) => {
 		})
 		.catch((err) => {
 			res.status(500).send({
-				message:
-					err.message ||
-					"\n" +
-						"Erro ao tentar encontrar projeto com id = " +
-						id +
-						".",
+				message: err.message || `"Erro ao tentar encontrar projeto com id = ${id}.`,
 			});
 		});
 };
 
-exports.atualizarPorId = (req, res) => {
+// Altera as informações do registro pelo id com as informações enviadas na requisição
+exports.atualizar = (req, res) => {
 	const id = req.params.id;
-
 	Projeto.update(req.body, {
 		where: { id: id },
 	})
@@ -130,22 +126,21 @@ exports.atualizarPorId = (req, res) => {
 				});
 			} else {
 				res.send({
-					message: `Não foi possível alterar projeto com id = ${id}. Talvez o projeto não exista ou a requisição esteja vazia!`,
+					message: `Não foi possível alterar projeto com id = ${id}. 
+					Talvez o projeto não exista ou a requisição esteja vazia!`,
 				});
 			}
 		})
 		.catch((err) => {
 			res.status(500).send({
-				message:
-					err.message ||
-					"\n" + "Erro ao alterar projeto com id = " + id + ".",
+				message: err.message || `Erro ao alterar projeto com id = ${id}.`,
 			});
 		});
 };
 
+// Remove o registro pelo id enviado na requisição
 exports.removerPorId = (req, res) => {
 	const id = req.params.id;
-
 	Projeto.destroy({
 		where: { id: id },
 	})
@@ -156,19 +151,19 @@ exports.removerPorId = (req, res) => {
 				});
 			} else {
 				res.send({
-					message: `Não foi possível remover projetos com id = ${id}. Talvez o projeto não exista ou a requisição esteja vazia!`,
+					message: `Não foi possível remover projetos com id = ${id}. 
+					Talvez o projeto não exista ou a requisição esteja vazia!`,
 				});
 			}
 		})
 		.catch((err) => {
 			res.status(500).send({
-				message:
-					err.message ||
-					"\n" + "Erro ao remover projeto com id = " + id + ".",
+				message: err.message || `Erro ao remover projeto com id = ${id}.`,
 			});
 		});
 };
 
+// Remove todos os registros
 exports.removerTodos = (req, res) => {
 	Projeto.destroy({
 		where: {},
@@ -179,9 +174,7 @@ exports.removerTodos = (req, res) => {
 		})
 		.catch((err) => {
 			res.status(500).send({
-				message:
-					err.message ||
-					"\n" + "Erro ao tentar remover todos os projetos.",
+				message: err.message || `Erro ao tentar remover todos os projetos.`,
 			});
 		});
 };

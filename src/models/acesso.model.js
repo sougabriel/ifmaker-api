@@ -1,5 +1,7 @@
 module.exports = (sequelize, Sequelize) => {
 	const Pessoa = require("./pessoa.model.js");
+	
+	// Cria a tabela e seus campos
 	const Acesso = sequelize.define("acesso", {
         diaHoraEntrada: {
 			type: Sequelize.DATE,
@@ -15,6 +17,7 @@ module.exports = (sequelize, Sequelize) => {
 		},
 	});
 
+	// Cria relacionamento com a tabela Pessoa através do campo pessoaId
 	Acesso.belongsTo(Pessoa, {
 		foreignKey: "pessoaId",
 		allowNull: false,

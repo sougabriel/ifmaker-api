@@ -1,4 +1,6 @@
 module.exports = (sequelize, Sequelize) => {
+	
+	// Cria a tabelas e seus campos
 	const Pessoa = sequelize.define("pessoa", {
 		nome: {
 			type: Sequelize.STRING(60),

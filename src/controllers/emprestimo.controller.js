@@ -1,14 +1,18 @@
 const Emprestimo = require("../models/emprestimo.model");
+
+// Usado para realizar operações como AND, OR, LIKE, etc
 const { Op } = require("sequelize");
 
+// Método para adicionar um registro no banco de dados
 exports.adicionar = (req, res) => {
+	// Verifica se os campos de requisição são nulos/vazios
 	if (!req.body.dataInicial || !req.body.dataFinal || !req.body.quantidade || !req.body.pessoaId || !req.body.materialId) {
 		res.status(400).send({
 			message: "Quaisquer dos campos não podem ser vazios!",
 		});
 		return;
 	}
-
+	// Cria o registro
 	const emprestimo = {
 		dataInicial: req.body.dataInicial,
 		dataFinal: req.body.dataFinal,
@@ -17,7 +21,7 @@ exports.adicionar = (req, res) => {
 		pessoaId: req.body.pessoaId,
 		materialId: req.body.materialId,
 	};
-
+	// Inseri o registro no banco
 	Emprestimo.create(emprestimo)
 		.then((data) => {
 			res.send(data);
@@ -31,9 +35,11 @@ exports.adicionar = (req, res) => {
 		});
 };
 
+// Método para consultar todos os registros no banco de dados
 exports.consultarTodos = async (req, res) => {
 	try {
 		const emprestimo = await Emprestimo.findAll({
+			// Ordena a lista de registro pelos últimos inseridos
 			order: [
 				['createdAt', 'DESC'],
 			]
@@ -47,9 +53,9 @@ exports.consultarTodos = async (req, res) => {
 	}
 };
 
+// Consulta um registro pelo id
 exports.consultarPorId = (req, res) => {
 	const id = req.params.id;
-
 	Emprestimo.findByPk(id)
 		.then((data) => {
 			if (data) {
@@ -62,19 +68,14 @@ exports.consultarPorId = (req, res) => {
 		})
 		.catch((err) => {
 			res.status(500).send({
-				message:
-					err.message ||
-					"\n" +
-						"Erro ao tentar encontrar emprestimo com id = " +
-						id +
-						".",
+				message: err.message || `Erro ao tentar encontrar emprestimo com id = ${id}.`,
 			});
 		});
 };
 
+// Consulta todos os registros pela data inicial enviada na requisição
 exports.consultarPorDataInicial = (req, res) => {
 	const dataInicial = req.params.dataInicial;
-
 	Emprestimo.findAll({
 		where: { dataInicial: { [Op.substring]: dataInicial } },
 	})
@@ -89,15 +90,14 @@ exports.consultarPorDataInicial = (req, res) => {
 		})
 		.catch((err) => {
 			res.status(500).send({
-				message:
-					err.message || "\n" + "Erro ao tentar encontrar acesso.",
+				message: err.message || "Erro ao tentar encontrar acesso.",
 			});
 		});
 };
 
+// Consulta todos os registros pela data final enviada na requisição
 exports.consultarPorDataFinal = (req, res) => {
 	const dataFinal = req.params.dataFinal;
-
 	Emprestimo.findAll({
 		where: { dataFinal: { [Op.substring]: dataFinal } },
 	})
@@ -112,15 +112,14 @@ exports.consultarPorDataFinal = (req, res) => {
 		})
 		.catch((err) => {
 			res.status(500).send({
-				message:
-					err.message || "\n" + "Erro ao tentar encontrar acesso.",
+				message: err.message || "Erro ao tentar encontrar acesso.",
 			});
 		});
 };
 
+// Consulta todos os registros pelo id da pessoa enviado na requisição
 exports.consultarPorPessoa = (req, res) => {
 	const pessoaId = req.params.pessoaId;
-
 	Emprestimo.findAll({
 		where: { pessoaId: { [Op.eq]: pessoaId } },
 	})
@@ -135,15 +134,14 @@ exports.consultarPorPessoa = (req, res) => {
 		})
 		.catch((err) => {
 			res.status(500).send({
-				message:
-					err.message || "\n" + "Erro ao tentar encontrar acesso.",
+				message: err.message || "Erro ao tentar encontrar acesso.",
 			});
 		});
 };
 
+// Consulta todos os registros pelo id do material enviado na requisição
 exports.consultarPorMaterial = (req, res) => {
 	const materialId = req.params.materialId;
-
 	Emprestimo.findAll({
 		where: { materialId: { [Op.eq]: materialId } },
 	})
@@ -158,42 +156,40 @@ exports.consultarPorMaterial = (req, res) => {
 		})
 		.catch((err) => {
 			res.status(500).send({
-				message:
-					err.message || "\n" + "Erro ao tentar encontrar acesso.",
+				message: err.message || "Erro ao tentar encontrar acesso.",
 			});
 		});
 };
 
+// Altera as informações do registro pelo id com as informações enviadas na requisição
 exports.atualizar = (req, res) => {
 	const pessoaId = req.params.pessoaId;
 	const materialId = req.params.materialId;
-
 	Emprestimo.update(req.body, {
 		where: { [Op.and]: { pessoaId: pessoaId, materialId: materialId }, },
 	})
 		.then((num) => {
 			if (num == 1) {
 				res.send({
-					message: "Emprestimo alterado com sucesso! ",
+					message: "Emprestimo alterado com sucesso!",
 				});
 			} else {
 				res.send({
-					message: `Não foi possível alterar emprestimo com id = ${id}. Talvez o emprestimo não exista ou a requisição esteja vazia!`,
+					message: `Não foi possível alterar emprestimo com id = ${id}. 
+					Talvez o emprestimo não exista ou a requisição esteja vazia!`,
 				});
 			}
 		})
 		.catch((err) => {
 			res.status(500).send({
-				message:
-					err.message ||
-					"\n" + "Erro ao alterar emprestimo com id = " + id + ".",
+				message: err.message || `Erro ao alterar emprestimo com id = ${id}.`,
 			});
 		});
 };
 
+// Remove o registro pelo id enviado na requisição
 exports.removerPorId = (req, res) => {
 	const id = req.params.id;
-
 	Emprestimo.destroy({
 		where: { id: id },
 	})
@@ -204,20 +200,19 @@ exports.removerPorId = (req, res) => {
 				});
 			} else {
 				res.send({
-					message: `Não foi possível remover emprestimo com id = ${id}. Talvez o emprestimo não exista ou a requisição esteja vazia!`,
+					message: `Não foi possível remover emprestimo com id = ${id}. 
+					Talvez o emprestimo não exista ou a requisição esteja vazia!`,
 				});
 			}
 		})
 		.catch((err) => {
 			res.status(500).send({
-				message:
-					err.message ||
-					"\n" + "Erro ao remover emprestimo com id = " + id + ".",
+				message: err.message || `Erro ao remover emprestimo com id = ${id}.`,
 			});
 		});
 };
 
-// Métodos do Administrador
+// Remove todos os registros
 exports.removerTodos = (req, res) => {
 	Emprestimo.destroy({
 		where: {},
@@ -230,9 +225,7 @@ exports.removerTodos = (req, res) => {
 		})
 		.catch((err) => {
 			res.status(500).send({
-				message:
-					err.message ||
-					"\n" + "Erro ao tentar remover todos os materiais.",
+				message: err.message || "Erro ao tentar remover todos os materiais.",
 			});
 		});
 };

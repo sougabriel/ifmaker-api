@@ -1,6 +1,8 @@
 module.exports = (sequelize, Sequelize) => {
     const Pessoa = require("./pessoa.model.js");
     const Material = require("./material.model.js");
+
+    // Cria a tabelas e seus campos
 	const Emprestimo = sequelize.define("emprestimo", {
 		dataInicial: {
             type: Sequelize.DATE,
@@ -20,6 +22,7 @@ module.exports = (sequelize, Sequelize) => {
         }
 	});
 
+    // Cria relacionamento com a tabela Material e Pessoa
 	Pessoa.belongsToMany(Material, {
 		through: Emprestimo,
 	});

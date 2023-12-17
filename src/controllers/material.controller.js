@@ -1,20 +1,24 @@
 const Material = require("../models/material.model");
+
+// Usado para realizar operações como AND, OR, LIKE, etc
 const { Op } = require("sequelize");
 
+// Método para adicionar um registro no banco de dados
 exports.adicionar = (req, res) => {
+	// Verifica se os campos de requisição são nulos/vazios
 	if (!req.body.nome || !req.body.tipo) {
 		res.status(400).send({
 			message: "Quaisquer dos campos não podem ser vazios!",
 		});
 		return;
 	}
-
+	// Cria o registro
 	const material = {
 		nome: req.body.nome,
 		tipo: req.body.tipo,
 		descricao: req.body.descricao,
 	};
-
+	// Inseri o registro no banco
 	Material.create(material)
 		.then((data) => {
 			res.send(data);
@@ -22,15 +26,16 @@ exports.adicionar = (req, res) => {
 		.catch((err) => {
 			res.status(500).send({
 				message:
-					err.message ||
-					"\n" + "Falha ao tentar criar novo material.",
+					err.message || `Falha ao tentar criar novo material.`,
 			});
 		});
 };
 
+// Método para consultar todos os registros no banco de dados
 exports.consultarTodos = async (req, res) => {
 	try {
 		const material = await Material.findAll({
+			// Ordena a lista de registro pelos últimos inseridos
 			order: [
 				['createdAt', 'DESC'],
 			]
@@ -39,14 +44,14 @@ exports.consultarTodos = async (req, res) => {
 	} catch (err) {
 		console.error(err);
 		res.status(500).send({
-			message: "Erro ao recuperar material",
+			message: `Erro ao recuperar material.`,
 		});
 	}
 };
 
+// Consulta um registro pelo id
 exports.consultarPorId = (req, res) => {
 	const id = req.params.id;
-
 	Material.findByPk(id)
 		.then((data) => {
 			if (data) {
@@ -59,20 +64,18 @@ exports.consultarPorId = (req, res) => {
 		})
 		.catch((err) => {
 			res.status(500).send({
-				message:
-					err.message ||
-					"\n" +
-						"Erro ao tentar encontrar material com id = " +
-						id +
-						".",
+				message: err.message || `Erro ao tentar encontrar material com id = ${id}.`,
 			});
 		});
 };
 
+// Consulta todos os registros com o nome enviado na requisição
 exports.consultarPorNome = (req, res) => {
 	const nome = req.params.nome;
-
-	Material.findAll({ where: { nome: { [Op.substring]: nome } } })
+	Material.findAll({ where: { 
+		// Seleciona que contém a requisição
+		nome: { [Op.substring]: nome } 
+	} })
 		.then((data) => {
 			if (data) {
 				res.send(data);
@@ -84,15 +87,14 @@ exports.consultarPorNome = (req, res) => {
 		})
 		.catch((err) => {
 			res.status(500).send({
-				message:
-					err.message || "\n" + "Erro ao tentar encontrar material.",
+				message: err.message || `Erro ao tentar encontrar material.`,
 			});
 		});
 };
 
+// Consulta todos os registros pelo campo tipo enviado na requisição
 exports.consultarPorTipo = (req, res) => {
 	const tipo = req.params.tipo;
-
 	Material.findAll({ where: { tipo: { [Op.substring]: tipo } } })
 		.then((data) => {
 			if (data) {
@@ -105,15 +107,14 @@ exports.consultarPorTipo = (req, res) => {
 		})
 		.catch((err) => {
 			res.status(500).send({
-				message:
-					err.message || "\n" + "Erro ao tentar encontrar material.",
+				message: err.message || `Erro ao tentar encontrar material.`,
 			});
 		});
 };
 
+// Altera as informações do registro pelo id com as informações enviadas na requisição
 exports.atualizar = (req, res) => {
 	const id = req.params.id;
-
 	Material.update(req.body, {
 		where: { id: id },
 	})
@@ -124,22 +125,21 @@ exports.atualizar = (req, res) => {
 				});
 			} else {
 				res.send({
-					message: `Não foi possível alterar material com id = ${id}. Talvez o material não exista ou a requisição esteja vazia!`,
+					message: `Não foi possível alterar material com id = ${id}. 
+					Talvez o material não exista ou a requisição esteja vazia!`,
 				});
 			}
 		})
 		.catch((err) => {
 			res.status(500).send({
-				message:
-					err.message ||
-					"\n" + "Erro ao alterar material com id = " + id + ".",
+				message: err.message || `Erro ao alterar material com id = ${id}.`,
 			});
 		});
 };
 
+// Remove o registro pelo id enviado na requisição
 exports.removerPorId = (req, res) => {
 	const id = req.params.id;
-
 	Material.destroy({
 		where: { id: id },
 	})
@@ -150,20 +150,19 @@ exports.removerPorId = (req, res) => {
 				});
 			} else {
 				res.send({
-					message: `Não foi possível remover material com id = ${id}. Talvez o material não exista ou a requisição esteja vazia!`,
+					message: `Não foi possível remover material com id = ${id}. 
+					Talvez o material não exista ou a requisição esteja vazia!`,
 				});
 			}
 		})
 		.catch((err) => {
 			res.status(500).send({
-				message:
-					err.message ||
-					"\n" + "Erro ao remover material com id = " + id + ".",
+				message: err.message || `Erro ao remover material com id = ${id}.`,
 			});
 		});
 };
 
-// Métodos do Administrador
+// Remove todos os registros
 exports.removerTodos = (req, res) => {
 	Material.destroy({
 		where: {},

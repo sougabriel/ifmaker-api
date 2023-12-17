@@ -1,4 +1,6 @@
 module.exports = (sequelize, Sequelize) => {
+	
+	// Cria a tabelas e seus campos
 	const Material = sequelize.define("material", {
 		nome: {
 			type: Sequelize.STRING(100),
