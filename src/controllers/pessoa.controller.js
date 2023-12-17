@@ -4,7 +4,7 @@ const Pessoa = require("../models/pessoa.model");
 const { Op } = require("sequelize");
 
 // Método para adicionar um registro no banco de dados
-exports.adicionar = (req, res) => {
+exports.adicionar = async (req, res) => {
 	// Verifica se os campos de requisição são nulos/vazios
 	if (!req.body.nome || !req.body.email || !req.body.publico) {
 		res.status(400).send({
@@ -20,7 +20,7 @@ exports.adicionar = (req, res) => {
 		publico: req.body.publico,
 	};
 	// Inseri o registro no banco
-	Pessoa.create(pessoa)
+	await Pessoa.create(pessoa)
 		.then((data) => {
 			res.send(data);
 		})
@@ -32,26 +32,25 @@ exports.adicionar = (req, res) => {
 };
 
 // Método para consultar todos os registros no banco de dados
-exports.consultarTodos = (req, res) => {
-	Pessoa.findAll({
+exports.consultarTodos = async (req, res) => {
+	await Pessoa.findAll({
 		// Ordena a lista de registro pelos últimos inseridos
-		order: [
-			['createdAt', 'DESC'],
-		]
+		order: [["createdAt", "DESC"]],
 	})
 		.then((data) => {
 			res.send(data);
 		})
 		.catch((err) => {
 			res.status(500).send({
-				message: err.message || `Falha ao tentar encontrar por pessoas.`,
+				message:
+					err.message || `Falha ao tentar encontrar por pessoas.`,
 			});
 		});
 };
 
 // Consulta todos os registros ordenados por nome
-exports.consultarTodosOrdNome = (req, res) => {
-	Pessoa.findAll({
+exports.consultarTodosOrdNome = async (req, res) => {
+	await Pessoa.findAll({
 		order: ["nome"],
 	})
 		.then((data) => {
@@ -59,15 +58,15 @@ exports.consultarTodosOrdNome = (req, res) => {
 		})
 		.catch((err) => {
 			res.status(500).send({
-				message: err.message || `Falha ao tentar encontrar por pessoas.`,
+				message:
+					err.message || `Falha ao tentar encontrar por pessoas.`,
 			});
 		});
 };
 
-exports.consultarPorId = (req, res) => {
+exports.consultarPorId = async (req, res) => {
 	const id = req.params.id;
-
-	Pessoa.findByPk(id)
+	await Pessoa.findByPk(id)
 		.then((data) => {
 			if (data) {
 				res.send(data);
@@ -79,15 +78,21 @@ exports.consultarPorId = (req, res) => {
 		})
 		.catch((err) => {
 			res.status(500).send({
-				message: err.message || `Erro ao tentar encontrar pessoa com id = ${id}.`,
+				message:
+					err.message ||
+					`Erro ao tentar encontrar pessoa com id = ${id}.`,
 			});
 		});
 };
 
 // Consulta todos os registros pelo campo nome enviado na requisição
-exports.consultarPorNome = (req, res) => {
+exports.consultarPorNome = async (req, res) => {
 	const nome = req.params.nome;
-	Pessoa.findAll({ where: { nome: { [Op.substring]: nome } } })
+	await Pessoa.findAll({
+		where: {
+			nome: { [Op.substring]: nome },
+		},
+	})
 		.then((data) => {
 			if (data) {
 				res.send(data);
@@ -99,15 +104,19 @@ exports.consultarPorNome = (req, res) => {
 		})
 		.catch((err) => {
 			res.status(500).send({
-				message: err.message ||`Erro ao tentar encontrar pessoa.`,
+				message: err.message || `Erro ao tentar encontrar pessoa.`,
 			});
 		});
 };
 
 // Consulta todos os registros pelo campo email enviado na requisição
-exports.consultarPorEmail = (req, res) => {
+exports.consultarPorEmail = async (req, res) => {
 	const email = req.params.email;
-	Pessoa.findAll({ where: { email: { [Op.substring]: email } } })
+	await Pessoa.findAll({
+		where: {
+			email: { [Op.substring]: email },
+		},
+	})
 		.then((data) => {
 			if (data) {
 				res.send(data);
@@ -125,9 +134,13 @@ exports.consultarPorEmail = (req, res) => {
 };
 
 // Consulta todos os registros pelo campo publico enviado na requisição
-exports.consultarPorPublico = (req, res) => {
+exports.consultarPorPublico = async (req, res) => {
 	const publico = req.params.publico;
-	Pessoa.findAll({ where: { publico: { [Op.substring]: publico } } })
+	await Pessoa.findAll({
+		where: {
+			publico: { [Op.substring]: publico },
+		},
+	})
 		.then((data) => {
 			if (data) {
 				res.send(data);
@@ -145,9 +158,9 @@ exports.consultarPorPublico = (req, res) => {
 };
 
 // Altera as informações do registro pelo id com as informações enviadas na requisição
-exports.atualizar = (req, res) => {
+exports.atualizar = async (req, res) => {
 	const id = req.params.id;
-	Pessoa.update(req.body, {
+	await Pessoa.update(req.body, {
 		where: { id: id },
 	})
 		.then((num) => {
@@ -164,15 +177,16 @@ exports.atualizar = (req, res) => {
 		})
 		.catch((err) => {
 			res.status(500).send({
-				message: err.message || `Erro ao alterar pessoa com id = ${id}.`,
+				message:
+					err.message || `Erro ao alterar pessoa com id = ${id}.`,
 			});
 		});
 };
 
 // Remove o registro pelo id enviado na requisição
-exports.removerPorId = (req, res) => {
+exports.removerPorId = async (req, res) => {
 	const id = req.params.id;
-	Pessoa.destroy({
+	await Pessoa.destroy({
 		where: { id: id },
 	})
 		.then((num) => {
@@ -189,14 +203,15 @@ exports.removerPorId = (req, res) => {
 		})
 		.catch((err) => {
 			res.status(500).send({
-				message: err.message || `Erro ao remover pessoa com id = ${id}.`,
+				message:
+					err.message || `Erro ao remover pessoa com id = ${id}.`,
 			});
 		});
 };
 
 // Remove todos os registros no banco de dados
-exports.removerTodos = (req, res) => {
-	Pessoa.destroy({
+exports.removerTodos = async (req, res) => {
+	await Pessoa.destroy({
 		where: {},
 		truncate: false,
 	})
@@ -205,7 +220,8 @@ exports.removerTodos = (req, res) => {
 		})
 		.catch((err) => {
 			res.status(500).send({
-				message: err.message || `Erro ao tentar remover todas as pessoas.`,
+				message:
+					err.message || `Erro ao tentar remover todas as pessoas.`,
 			});
 		});
 };

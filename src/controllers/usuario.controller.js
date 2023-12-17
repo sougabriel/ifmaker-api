@@ -4,7 +4,7 @@ const Usuario = require("../models/usuario.model");
 const { Op } = require("sequelize");
 
 // Método para adicionar um registro no banco de dados
-exports.adicionar = (req, res) => {
+exports.adicionar = async (req, res) => {
 	// Verifica se os campos de requisição são nulos/vazios
 	if (
 		!req.body.nomeUsuario ||
@@ -25,7 +25,7 @@ exports.adicionar = (req, res) => {
 		pessoaId: req.body.pessoaId,
 	};
 	// Inseri o registro no banco
-	Usuario.create(usuario)
+	await Usuario.create(usuario)
 		.then((data) => {
 			res.send(data);
 		})
@@ -37,26 +37,25 @@ exports.adicionar = (req, res) => {
 };
 
 // Retorna todos os usuários do banco de dados
-exports.consultarTodos = (req, res) => {
-	Usuario.findAll({
-		order: [
-			['createdAt', 'DESC'],
-		]
+exports.consultarTodos = async (req, res) => {
+	await Usuario.findAll({
+		order: [["createdAt", "DESC"]],
 	})
 		.then((data) => {
 			res.send(data);
 		})
 		.catch((err) => {
 			res.status(500).send({
-				message: err.message || `Falha ao tentar encontrar por usuários.`,
+				message:
+					err.message || `Falha ao tentar encontrar por usuários.`,
 			});
 		});
 };
 
 // Retorna um único usuário pelo id
-exports.consultarPorId = (req, res) => {
+exports.consultarPorId = async (req, res) => {
 	const id = req.params.id;
-	Usuario.findByPk(id)
+	await Usuario.findByPk(id)
 		.then((data) => {
 			if (data) {
 				res.send(data);
@@ -68,16 +67,18 @@ exports.consultarPorId = (req, res) => {
 		})
 		.catch((err) => {
 			res.status(500).send({
-				message: err.message || `Erro ao tentar encontrar usuário com id = ${id}.`,
+				message:
+					err.message ||
+					`Erro ao tentar encontrar usuário com id = ${id}.`,
 			});
 		});
 };
 
 // Método para verificar login do usuário
-exports.logar = (req, res) => {
+exports.logar = async (req, res) => {
 	const nomeUsuario = req.body.nomeUsuario;
 	const senha = req.body.senha;
-	Usuario.findAll({
+	await Usuario.findAll({
 		where: {
 			// Seleciona usuário com os campos correspondentes à requisição
 			[Op.and]: [{ nomeUsuario: nomeUsuario }, { senha: senha }],
@@ -88,16 +89,16 @@ exports.logar = (req, res) => {
 		})
 		.catch((err) => {
 			res.status(500).send({
-				message: err.message || `Falha ao tentar encontrar por usuários.`,
+				message:
+					err.message || `Falha ao tentar encontrar por usuários.`,
 			});
 		});
 };
 
 // Altera usuário pelo id
-exports.atualizar = (req, res) => {
+exports.atualizar = async (req, res) => {
 	const id = req.body.id;
-
-	Usuario.update(req.body, {
+	await Usuario.update(req.body, {
 		where: { id: id },
 	})
 		.then((num) => {
@@ -114,15 +115,16 @@ exports.atualizar = (req, res) => {
 		})
 		.catch((err) => {
 			res.status(500).send({
-				message: err.message || `Erro ao alterar usuário com id = ${id}.`,
+				message:
+					err.message || `Erro ao alterar usuário com id = ${id}.`,
 			});
 		});
 };
 
 // Remove usuário pelo id
-exports.removerPorId = (req, res) => {
+exports.removerPorId = async (req, res) => {
 	const id = req.params.id;
-	Usuario.destroy({
+	await Usuario.destroy({
 		where: { id: id },
 	})
 		.then((num) => {
@@ -139,25 +141,27 @@ exports.removerPorId = (req, res) => {
 		})
 		.catch((err) => {
 			res.status(500).send({
-				message: err.message || `Erro ao remover usuário com id = ${id}.`,
+				message:
+					err.message || `Erro ao remover usuário com id = ${id}.`,
 			});
 		});
 };
 
 // Remove todos os usuários do banco de dados
-exports.removerTodos = (req, res) => {
-	Usuario.destroy({
+exports.removerTodos = async (req, res) => {
+	await Usuario.destroy({
 		where: {},
 		truncate: false,
 	})
 		.then((nums) => {
-			res.send({ 
-				message: `${nums} usuários removidos com sucesso!`
+			res.send({
+				message: `${nums} usuários removidos com sucesso!`,
 			});
 		})
 		.catch((err) => {
 			res.status(500).send({
-				message: err.message || `Erro ao tentar remover todos os usuários.`,
+				message:
+					err.message || `Erro ao tentar remover todos os usuários.`,
 			});
 		});
 };

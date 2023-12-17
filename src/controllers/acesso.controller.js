@@ -4,7 +4,7 @@ const Acesso = require("../models/acesso.model");
 const { Op } = require("sequelize");
 
 // Método para adicionar um registro no banco de dados
-exports.adicionar = (req, res) => {
+exports.adicionar = async (req, res) => {
 	// Verifica se os campos de requisição são nulos/vazios
 	if (!req.body.diaHoraEntrada || !req.body.pessoaId) {
 		res.status(400).send({
@@ -19,7 +19,7 @@ exports.adicionar = (req, res) => {
 		pessoaId: req.body.pessoaId,
 	};
 	// Inseri o registro no banco
-	Acesso.create(acesso)
+	await Acesso.create(acesso)
 		.then((data) => {
 			res.send(data);
 		})
@@ -35,9 +35,7 @@ exports.consultarTodos = async (req, res) => {
 	try {
 		const acesso = await Acesso.findAll({
 			// Ordena a lista de registro pelos últimos inseridos
-			order: [
-				['createdAt', 'DESC'],
-			]
+			order: [["createdAt", "DESC"]],
 		});
 		res.send(acesso);
 	} catch (err) {
@@ -52,7 +50,7 @@ exports.consultarTodos = async (req, res) => {
 exports.consultarTodosOrdData = async (req, res) => {
 	try {
 		const acesso = await Acesso.findAll({
-			order: [ ['diaHoraEntrada', 'DESC'], ],
+			order: [["diaHoraEntrada", "DESC"]],
 		});
 		res.send(acesso);
 	} catch (err) {
@@ -64,9 +62,9 @@ exports.consultarTodosOrdData = async (req, res) => {
 };
 
 // Consulta todos os registros com a data enviada na requisição
-exports.consultarPorData = (req, res) => {
+exports.consultarPorData = async (req, res) => {
 	const data = req.params.data;
-	Acesso.findAll({
+	await Acesso.findAll({
 		where: { diaHoraEntrada: { [Op.substring]: data } },
 	})
 		.then((data) => {
@@ -86,9 +84,9 @@ exports.consultarPorData = (req, res) => {
 };
 
 // Consultar todos registros pelo id da pessoa enviada na requisição
-exports.consultarPorPessoa = (req, res) => {
+exports.consultarPorPessoa = async (req, res) => {
 	const pessoaId = req.params.pessoaId;
-	Acesso.findAll({
+	await Acesso.findAll({
 		where: { pessoaId: pessoaId },
 	})
 		.then((data) => {
@@ -108,9 +106,9 @@ exports.consultarPorPessoa = (req, res) => {
 };
 
 // Altera as informações do registro pelo id com as informações enviadas na requisição
-exports.atualizar = (req, res) => {
+exports.atualizar = async (req, res) => {
 	const id = req.params.id;
-	Acesso.update(req.body, {
+	await Acesso.update(req.body, {
 		where: { id: id },
 	})
 		.then((num) => {
@@ -127,15 +125,16 @@ exports.atualizar = (req, res) => {
 		})
 		.catch((err) => {
 			res.status(500).send({
-				message: err.message || `Erro ao alterar acesso com id = ${id}.`,
+				message:
+					err.message || `Erro ao alterar acesso com id = ${id}.`,
 			});
 		});
 };
 
 // Remove o registro pelo id enviado na requisição
-exports.removerPorId = (req, res) => {
+exports.removerPorId = async (req, res) => {
 	const id = req.params.id;
-	Acesso.destroy({
+	await Acesso.destroy({
 		where: { id: id },
 	})
 		.then((num) => {
@@ -152,7 +151,8 @@ exports.removerPorId = (req, res) => {
 		})
 		.catch((err) => {
 			res.status(500).send({
-				message: err.message || `Erro ao remover acesso com id = ${id}.`,
+				message:
+					err.message || `Erro ao remover acesso com id = ${id}.`,
 			});
 		});
 };

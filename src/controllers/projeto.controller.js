@@ -4,7 +4,7 @@ const Projeto = require("../models/projeto.model");
 const { Op } = require("sequelize");
 
 // Método para adicionar um registro no banco de dados
-exports.adicionar = (req, res) => {
+exports.adicionar = async (req, res) => {
 	// Verifica se os campos de requisição são nulos/vazios
 	if (!req.body.nome) {
 		res.status(400).send({
@@ -18,7 +18,7 @@ exports.adicionar = (req, res) => {
 		descricao: req.body.descricao,
 	};
 	// Inseri o registro no banco
-	Projeto.create(projeto)
+	await Projeto.create(projeto)
 		.then((data) => {
 			res.send(data);
 		})
@@ -30,30 +30,31 @@ exports.adicionar = (req, res) => {
 };
 
 // Método para consultar todos os registros no banco de dados
-exports.consultarTodos = (req, res) => {
-	Projeto.findAll({
+exports.consultarTodos = async (req, res) => {
+	await Projeto.findAll({
 		// Ordena a lista de registro pelos últimos inseridos
-		order: [
-			['createdAt', 'DESC'],
-		]
+		order: [["createdAt", "DESC"]],
 	})
 		.then((data) => {
 			res.send(data);
 		})
 		.catch((err) => {
 			res.status(500).send({
-				message: err.message || `Falha ao tentar encontrar por projetos.`,
+				message:
+					err.message || `Falha ao tentar encontrar por projetos.`,
 			});
 		});
 };
 
 // Consulta todos os registros pelo campo nome enviado na requisição
-exports.consultarPorNome = (req, res) => {
+exports.consultarPorNome = async (req, res) => {
 	const nome = req.params.nome;
-	Projeto.findAll({ where: { 
-		// Seleciona os registros de contém a requisição
-		nome: { [Op.substring]: nome } 
-	} })
+	await Projeto.findAll({
+		where: {
+			// Seleciona os registros de contém a requisição
+			nome: { [Op.substring]: nome },
+		},
+	})
 		.then((data) => {
 			if (data) {
 				res.send(data);
@@ -71,9 +72,9 @@ exports.consultarPorNome = (req, res) => {
 };
 
 // Consulta um registro pelo id envido na requisição
-exports.consultarPorId = (req, res) => {
+exports.consultarPorId = async (req, res) => {
 	const id = req.params.id;
-	Projeto.findByPk(id)
+	await Projeto.findByPk(id)
 		.then((data) => {
 			if (data) {
 				res.send(data);
@@ -85,18 +86,22 @@ exports.consultarPorId = (req, res) => {
 		})
 		.catch((err) => {
 			res.status(500).send({
-				message: err.message || `"Erro ao tentar encontrar projeto com id = ${id}.`,
+				message:
+					err.message ||
+					`"Erro ao tentar encontrar projeto com id = ${id}.`,
 			});
 		});
 };
 
 // Consulta todos os registros pelo campo nome enviado na requisição
-exports.consultarPorNome = (req, res) => {
+exports.consultarPorNome = async (req, res) => {
 	const nome = req.params.nome;
-	Projeto.findAll({ where: { 
-		// Seleciona os registros que comtém a requisição
-		nome: { [Op.like]: "%" + nome + "%" } 
-	} })
+	await Projeto.findAll({
+		where: {
+			// Seleciona os registros que comtém a requisição
+			nome: { [Op.like]: "%" + nome + "%" },
+		},
+	})
 		.then((data) => {
 			if (data) {
 				res.send(data);
@@ -108,15 +113,17 @@ exports.consultarPorNome = (req, res) => {
 		})
 		.catch((err) => {
 			res.status(500).send({
-				message: err.message || `"Erro ao tentar encontrar projeto com id = ${id}.`,
+				message:
+					err.message ||
+					`"Erro ao tentar encontrar projeto com id = ${id}.`,
 			});
 		});
 };
 
 // Altera as informações do registro pelo id com as informações enviadas na requisição
-exports.atualizar = (req, res) => {
+exports.atualizar = async (req, res) => {
 	const id = req.params.id;
-	Projeto.update(req.body, {
+	await Projeto.update(req.body, {
 		where: { id: id },
 	})
 		.then((num) => {
@@ -133,15 +140,16 @@ exports.atualizar = (req, res) => {
 		})
 		.catch((err) => {
 			res.status(500).send({
-				message: err.message || `Erro ao alterar projeto com id = ${id}.`,
+				message:
+					err.message || `Erro ao alterar projeto com id = ${id}.`,
 			});
 		});
 };
 
 // Remove o registro pelo id enviado na requisição
-exports.removerPorId = (req, res) => {
+exports.removerPorId = async (req, res) => {
 	const id = req.params.id;
-	Projeto.destroy({
+	await Projeto.destroy({
 		where: { id: id },
 	})
 		.then((num) => {
@@ -158,14 +166,15 @@ exports.removerPorId = (req, res) => {
 		})
 		.catch((err) => {
 			res.status(500).send({
-				message: err.message || `Erro ao remover projeto com id = ${id}.`,
+				message:
+					err.message || `Erro ao remover projeto com id = ${id}.`,
 			});
 		});
 };
 
 // Remove todos os registros
-exports.removerTodos = (req, res) => {
-	Projeto.destroy({
+exports.removerTodos = async (req, res) => {
+	await Projeto.destroy({
 		where: {},
 		truncate: false,
 	})
@@ -174,7 +183,8 @@ exports.removerTodos = (req, res) => {
 		})
 		.catch((err) => {
 			res.status(500).send({
-				message: err.message || `Erro ao tentar remover todos os projetos.`,
+				message:
+					err.message || `Erro ao tentar remover todos os projetos.`,
 			});
 		});
 };

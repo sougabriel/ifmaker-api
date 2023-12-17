@@ -4,9 +4,15 @@ const Emprestimo = require("../models/emprestimo.model");
 const { Op } = require("sequelize");
 
 // Método para adicionar um registro no banco de dados
-exports.adicionar = (req, res) => {
+exports.adicionar = async (req, res) => {
 	// Verifica se os campos de requisição são nulos/vazios
-	if (!req.body.dataInicial || !req.body.dataFinal || !req.body.quantidade || !req.body.pessoaId || !req.body.materialId) {
+	if (
+		!req.body.dataInicial ||
+		!req.body.dataFinal ||
+		!req.body.quantidade ||
+		!req.body.pessoaId ||
+		!req.body.materialId
+	) {
 		res.status(400).send({
 			message: "Quaisquer dos campos não podem ser vazios!",
 		});
@@ -22,7 +28,7 @@ exports.adicionar = (req, res) => {
 		materialId: req.body.materialId,
 	};
 	// Inseri o registro no banco
-	Emprestimo.create(emprestimo)
+	await Emprestimo.create(emprestimo)
 		.then((data) => {
 			res.send(data);
 		})
@@ -40,9 +46,7 @@ exports.consultarTodos = async (req, res) => {
 	try {
 		const emprestimo = await Emprestimo.findAll({
 			// Ordena a lista de registro pelos últimos inseridos
-			order: [
-				['createdAt', 'DESC'],
-			]
+			order: [["createdAt", "DESC"]],
 		});
 		res.send(emprestimo);
 	} catch (err) {
@@ -54,9 +58,9 @@ exports.consultarTodos = async (req, res) => {
 };
 
 // Consulta um registro pelo id
-exports.consultarPorId = (req, res) => {
+exports.consultarPorId = async (req, res) => {
 	const id = req.params.id;
-	Emprestimo.findByPk(id)
+	await Emprestimo.findByPk(id)
 		.then((data) => {
 			if (data) {
 				res.send(data);
@@ -68,15 +72,17 @@ exports.consultarPorId = (req, res) => {
 		})
 		.catch((err) => {
 			res.status(500).send({
-				message: err.message || `Erro ao tentar encontrar emprestimo com id = ${id}.`,
+				message:
+					err.message ||
+					`Erro ao tentar encontrar emprestimo com id = ${id}.`,
 			});
 		});
 };
 
 // Consulta todos os registros pela data inicial enviada na requisição
-exports.consultarPorDataInicial = (req, res) => {
+exports.consultarPorDataInicial = async (req, res) => {
 	const dataInicial = req.params.dataInicial;
-	Emprestimo.findAll({
+	await Emprestimo.findAll({
 		where: { dataInicial: { [Op.substring]: dataInicial } },
 	})
 		.then((data) => {
@@ -96,9 +102,9 @@ exports.consultarPorDataInicial = (req, res) => {
 };
 
 // Consulta todos os registros pela data final enviada na requisição
-exports.consultarPorDataFinal = (req, res) => {
+exports.consultarPorDataFinal = async (req, res) => {
 	const dataFinal = req.params.dataFinal;
-	Emprestimo.findAll({
+	await Emprestimo.findAll({
 		where: { dataFinal: { [Op.substring]: dataFinal } },
 	})
 		.then((data) => {
@@ -118,9 +124,9 @@ exports.consultarPorDataFinal = (req, res) => {
 };
 
 // Consulta todos os registros pelo id da pessoa enviado na requisição
-exports.consultarPorPessoa = (req, res) => {
+exports.consultarPorPessoa = async (req, res) => {
 	const pessoaId = req.params.pessoaId;
-	Emprestimo.findAll({
+	await Emprestimo.findAll({
 		where: { pessoaId: { [Op.eq]: pessoaId } },
 	})
 		.then((data) => {
@@ -140,9 +146,9 @@ exports.consultarPorPessoa = (req, res) => {
 };
 
 // Consulta todos os registros pelo id do material enviado na requisição
-exports.consultarPorMaterial = (req, res) => {
+exports.consultarPorMaterial = async (req, res) => {
 	const materialId = req.params.materialId;
-	Emprestimo.findAll({
+	await Emprestimo.findAll({
 		where: { materialId: { [Op.eq]: materialId } },
 	})
 		.then((data) => {
@@ -162,11 +168,11 @@ exports.consultarPorMaterial = (req, res) => {
 };
 
 // Altera as informações do registro pelo id com as informações enviadas na requisição
-exports.atualizar = (req, res) => {
+exports.atualizar = async (req, res) => {
 	const pessoaId = req.params.pessoaId;
 	const materialId = req.params.materialId;
-	Emprestimo.update(req.body, {
-		where: { [Op.and]: { pessoaId: pessoaId, materialId: materialId }, },
+	await Emprestimo.update(req.body, {
+		where: { [Op.and]: { pessoaId: pessoaId, materialId: materialId } },
 	})
 		.then((num) => {
 			if (num == 1) {
@@ -182,15 +188,16 @@ exports.atualizar = (req, res) => {
 		})
 		.catch((err) => {
 			res.status(500).send({
-				message: err.message || `Erro ao alterar emprestimo com id = ${id}.`,
+				message:
+					err.message || `Erro ao alterar emprestimo com id = ${id}.`,
 			});
 		});
 };
 
 // Remove o registro pelo id enviado na requisição
-exports.removerPorId = (req, res) => {
+exports.removerPorId = async (req, res) => {
 	const id = req.params.id;
-	Emprestimo.destroy({
+	await Emprestimo.destroy({
 		where: { id: id },
 	})
 		.then((num) => {
@@ -207,14 +214,15 @@ exports.removerPorId = (req, res) => {
 		})
 		.catch((err) => {
 			res.status(500).send({
-				message: err.message || `Erro ao remover emprestimo com id = ${id}.`,
+				message:
+					err.message || `Erro ao remover emprestimo com id = ${id}.`,
 			});
 		});
 };
 
 // Remove todos os registros
-exports.removerTodos = (req, res) => {
-	Emprestimo.destroy({
+exports.removerTodos = async (req, res) => {
+	await Emprestimo.destroy({
 		where: {},
 		truncate: false,
 	})
@@ -225,7 +233,8 @@ exports.removerTodos = (req, res) => {
 		})
 		.catch((err) => {
 			res.status(500).send({
-				message: err.message || "Erro ao tentar remover todos os materiais.",
+				message:
+					err.message || "Erro ao tentar remover todos os materiais.",
 			});
 		});
 };

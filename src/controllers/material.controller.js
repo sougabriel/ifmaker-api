@@ -4,7 +4,7 @@ const Material = require("../models/material.model");
 const { Op } = require("sequelize");
 
 // Método para adicionar um registro no banco de dados
-exports.adicionar = (req, res) => {
+exports.adicionar = async (req, res) => {
 	// Verifica se os campos de requisição são nulos/vazios
 	if (!req.body.nome || !req.body.tipo) {
 		res.status(400).send({
@@ -19,14 +19,13 @@ exports.adicionar = (req, res) => {
 		descricao: req.body.descricao,
 	};
 	// Inseri o registro no banco
-	Material.create(material)
+	await Material.create(material)
 		.then((data) => {
 			res.send(data);
 		})
 		.catch((err) => {
 			res.status(500).send({
-				message:
-					err.message || `Falha ao tentar criar novo material.`,
+				message: err.message || `Falha ao tentar criar novo material.`,
 			});
 		});
 };
@@ -36,9 +35,7 @@ exports.consultarTodos = async (req, res) => {
 	try {
 		const material = await Material.findAll({
 			// Ordena a lista de registro pelos últimos inseridos
-			order: [
-				['createdAt', 'DESC'],
-			]
+			order: [["createdAt", "DESC"]],
 		});
 		res.send(material);
 	} catch (err) {
@@ -50,9 +47,9 @@ exports.consultarTodos = async (req, res) => {
 };
 
 // Consulta um registro pelo id
-exports.consultarPorId = (req, res) => {
+exports.consultarPorId = async (req, res) => {
 	const id = req.params.id;
-	Material.findByPk(id)
+	await Material.findByPk(id)
 		.then((data) => {
 			if (data) {
 				res.send(data);
@@ -64,18 +61,22 @@ exports.consultarPorId = (req, res) => {
 		})
 		.catch((err) => {
 			res.status(500).send({
-				message: err.message || `Erro ao tentar encontrar material com id = ${id}.`,
+				message:
+					err.message ||
+					`Erro ao tentar encontrar material com id = ${id}.`,
 			});
 		});
 };
 
 // Consulta todos os registros com o nome enviado na requisição
-exports.consultarPorNome = (req, res) => {
+exports.consultarPorNome = async (req, res) => {
 	const nome = req.params.nome;
-	Material.findAll({ where: { 
-		// Seleciona que contém a requisição
-		nome: { [Op.substring]: nome } 
-	} })
+	await Material.findAll({
+		where: {
+			// Seleciona que contém a requisição
+			nome: { [Op.substring]: nome },
+		},
+	})
 		.then((data) => {
 			if (data) {
 				res.send(data);
@@ -93,9 +94,9 @@ exports.consultarPorNome = (req, res) => {
 };
 
 // Consulta todos os registros pelo campo tipo enviado na requisição
-exports.consultarPorTipo = (req, res) => {
+exports.consultarPorTipo = async (req, res) => {
 	const tipo = req.params.tipo;
-	Material.findAll({ where: { tipo: { [Op.substring]: tipo } } })
+	await Material.findAll({ where: { tipo: { [Op.substring]: tipo } } })
 		.then((data) => {
 			if (data) {
 				res.send(data);
@@ -113,9 +114,9 @@ exports.consultarPorTipo = (req, res) => {
 };
 
 // Altera as informações do registro pelo id com as informações enviadas na requisição
-exports.atualizar = (req, res) => {
+exports.atualizar = async (req, res) => {
 	const id = req.params.id;
-	Material.update(req.body, {
+	await Material.update(req.body, {
 		where: { id: id },
 	})
 		.then((num) => {
@@ -132,15 +133,16 @@ exports.atualizar = (req, res) => {
 		})
 		.catch((err) => {
 			res.status(500).send({
-				message: err.message || `Erro ao alterar material com id = ${id}.`,
+				message:
+					err.message || `Erro ao alterar material com id = ${id}.`,
 			});
 		});
 };
 
 // Remove o registro pelo id enviado na requisição
-exports.removerPorId = (req, res) => {
+exports.removerPorId = async (req, res) => {
 	const id = req.params.id;
-	Material.destroy({
+	await Material.destroy({
 		where: { id: id },
 	})
 		.then((num) => {
@@ -157,14 +159,15 @@ exports.removerPorId = (req, res) => {
 		})
 		.catch((err) => {
 			res.status(500).send({
-				message: err.message || `Erro ao remover material com id = ${id}.`,
+				message:
+					err.message || `Erro ao remover material com id = ${id}.`,
 			});
 		});
 };
 
 // Remove todos os registros
-exports.removerTodos = (req, res) => {
-	Material.destroy({
+exports.removerTodos = async (req, res) => {
+	await Material.destroy({
 		where: {},
 		truncate: false,
 	})
