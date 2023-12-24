@@ -1,5 +1,4 @@
 module.exports = (sequelize, Sequelize) => {
-	
 	// Cria a tabelas e seus campos
 	const Material = sequelize.define("material", {
 		nome: {
@@ -15,6 +14,5 @@ module.exports = (sequelize, Sequelize) => {
 			allowNull: true,
 		},
 	});
-	
 	module.exports = Material;
 };
